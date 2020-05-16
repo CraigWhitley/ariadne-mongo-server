@@ -1,0 +1,4 @@
+Flask>=1.1.2,<1.2
+ariadne>=0.11.0,<1
+flask-mongoengine>=0.9.5,<1
+pytest>=5.4.2,<6
