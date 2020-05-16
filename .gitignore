@@ -20,6 +20,9 @@ __pycache__/
 # Env Variables
 .env
 
+# Config files
+.cfg
+
 # Distribution / packaging
 .Python
 build/
