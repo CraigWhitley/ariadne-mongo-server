@@ -1,6 +1,4 @@
-from ariadne import QueryType, graphql_sync, make_executable_schema, \
-                                              load_schema_from_path
-from ariadne.constants import PLAYGROUND_HTML
+from ariadne import make_executable_schema, load_schema_from_path
 from ariadne.asgi import GraphQL
 from mongoengine import connect
 from dotenv import load_dotenv

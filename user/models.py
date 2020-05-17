@@ -1,9 +1,11 @@
-from mongoengine import Document, EmailField, StringField, DateTimeField
+from mongoengine import Document, EmailField, StringField, DateTimeField, \
+                        ObjectIdField
 import datetime as dt
 
 
 class User(Document):
     """Schema to represent a user in the db"""
+    _id = ObjectIdField()
     email = EmailField(required=True)
     password = StringField(max_length=128, min_length=7, required=True,
                            unique=True)
