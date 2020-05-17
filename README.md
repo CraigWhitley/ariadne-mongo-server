@@ -1,2 +1,2 @@
 # maintesoft-server
-Flask backend for Maintesoft
+Ariadne GraphQL backend for Maintesoft
