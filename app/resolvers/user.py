@@ -1,4 +1,3 @@
-from user.models import User
 from ariadne import ObjectType
 
 

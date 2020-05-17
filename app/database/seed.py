@@ -1,8 +1,12 @@
 from user.models import User
 
 
-def seed_some_users():
+def seed_all():
     User.drop_collection()
+    seed_some_users()
+
+
+def seed_some_users():
     User(
      email="test@test.com",
      password="somethingover8",

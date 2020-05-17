@@ -1,4 +1,6 @@
 ariadne>=0.11.0,<1
 pytest>=5.4.2,<6
 python-dotenv>=0.13.0,<1
+gunicorn>=20.0.4,<21
 uvicorn>=0.11.5,<1
+mongoengine>=0.20.0,<1

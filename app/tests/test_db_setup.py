@@ -6,7 +6,6 @@ import os
 
 @pytest.fixture(autouse=True)
 def register_test_db():
-    print("Ran db setup")
     register_connection(alias='default',
                         host=os.getenv("MONGO_DEV_URL"))
     register_connection(alias='test',

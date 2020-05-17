@@ -3,8 +3,8 @@ from ariadne.asgi import GraphQL
 from mongoengine import connect
 from dotenv import load_dotenv
 import os
-from database.seed import seed_some_users
-from user.resolvers import user
+from database.seed import seed_all
+from resolvers.user import user
 from resolvers.query import query
 
 
@@ -24,6 +24,7 @@ def setup_db_connections():
 
 
 setup_db_connections()
-seed_some_users()
+seed_all()
+
 
 app = GraphQL(schema, debug=True)
