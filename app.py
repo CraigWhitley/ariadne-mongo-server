@@ -1,5 +1,8 @@
-from flask import Flask
-from flask_mongoengine import MongoEngine
+from ariadne import QueryType, graphql_sync, make_executable_schema, \
+                                              load_schema_from_path
+from ariadne.constants import PLAYGROUND_HTML
+from flask import Flask, request, jsonify
+from mongoengine import connect
 from dotenv import load_dotenv
 import os
 
@@ -8,18 +11,18 @@ load_dotenv()
 
 
 app = Flask(__name__)
-app.config['MONGODB_SETTINGS'] = {
-    'host': os.getenv("MONGO_URL")
-}
 
 
-db = MongoEngine(app)
+type_defs = load_schema_from_path("schema/")
 
 
-@app.route('/')
-def index():
-    return '<h1> Hello, World </h1>'
+def setup_db_connections():
+    connect(host=os.getenv("MONGO_DEV_URL"), alias='default')
+    connect(host=os.getenv("MONGO_TEST_URL"), alias='test')
+
+
+setup_db_connections()
 
 
 if(__name__) == '__main__':
-    app.run()
+    app.run(debug=True)
