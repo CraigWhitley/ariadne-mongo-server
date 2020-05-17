@@ -11,4 +11,3 @@ class User(Document):
     last_name = StringField(max_length=50, min_length=2)
     updated_at = DateTimeField(default=dt.datetime.now())
     created_at = DateTimeField(default=dt.datetime.now())
-
