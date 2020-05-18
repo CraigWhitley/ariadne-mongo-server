@@ -8,7 +8,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def setup_db():
-    register_test_db
+    register_test_db()
 
 
 def test_can_authenticate_password():

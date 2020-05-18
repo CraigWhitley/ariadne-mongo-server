@@ -9,7 +9,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def setup_db():
-    register_test_db
+    register_test_db()
 
 
 def test_user_is_created():
