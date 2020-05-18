@@ -2,6 +2,15 @@ type Token {
     accessToken: String!
 }
 
+input RegisterUserInput {
+  password: String!
+  email: String!
+  firstName: String
+  lastName: String
+}
+
+
 extend type Mutation {
     loginUser(email: String!, password: String!): Token!
+    registerUser(data: RegisterUserInput):Token!
 }

@@ -1,4 +1,6 @@
 import bcrypt
+import jwt
+import os
 
 
 def hash_password(password):
@@ -12,3 +14,21 @@ def check_password(password, hashed_password):
         return True
     else:
         return False
+
+
+def encode_jwt(payload):
+    """Returns an encoded JWT token for supplied payload"""
+    key = os.getenv("JWT_SECRET")
+
+    encoded = jwt.encode(payload, key, algorithm='HS256')
+
+    return encoded
+
+
+def decode_jwt(token):
+    """Returns a decoded JWT's payload"""
+    key = os.getenv("JWT_SECRET")
+
+    decoded = jwt.decode(token, key, algorithms='HS256')
+
+    return decoded
