@@ -5,7 +5,6 @@ from utils.db import register_test_db
 import pytest
 
 
-
 @pytest.fixture(autouse=True)
 def setup_db():
     register_test_db()
