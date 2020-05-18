@@ -5,3 +5,8 @@ type User {
   firstName: String!
   lastName: String!
 }
+
+extend type Query {
+    allUsers: [User]!
+    findUserByEmail(email: String!):User
+}

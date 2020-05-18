@@ -9,17 +9,12 @@ user.set_alias("lastName", "last_name")
 
 
 @query.field("allUsers")
-def resolve_all_users(_, info):
-    request = info.context["request"]
-    print(request.headers.get("user-agent", "guest"))
+def resolve_all_users(*_):
     # TODO: add pagination to allUsers resolver
     return User.objects.all()
 
 
-@query.field("findByEmail")
-def resolve_find_by_email(_, info, email):
-    print(email)
-    request = info.context["request"]
-    print(request.headers.get("user-agent", "guest"))
+@query.field("findUserByEmail")
+def resolve_find_user_by_email(_, info, email):
     # TODO: email validation
     return User.objects(email=email).first()

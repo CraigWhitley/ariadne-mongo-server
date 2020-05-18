@@ -1,0 +1,7 @@
+type Token {
+    accessToken: String!
+}
+
+extend type Mutation {
+    loginUser(email: String!, password: String!): Token!
+}
