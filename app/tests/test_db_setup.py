@@ -1,16 +1,14 @@
-from mongoengine import register_connection
-from app import setup_db_connections
+from mongoengine import connect
 import pytest
-import os
 
 
 @pytest.fixture(autouse=True)
 def register_test_db():
-    register_connection(alias='default',
-                        host=os.getenv("MONGO_DEV_URL"))
-    register_connection(alias='test',
-                        host=os.getenv("MONGO_TEST_URL"))
+    connect(alias='default',
+            host="mongodb://localhost/maintesoft_dev")
+    connect(alias='test',
+            host="mongodb://localhost/maintesoft_test")
 
 
 def test_db_connections_setup():
-    setup_db_connections()
+    print("Starting tests...")

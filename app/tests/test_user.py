@@ -1,6 +1,5 @@
 from user.models import User
 from mongoengine.context_managers import switch_db
-from mongoengine import disconnect
 
 
 def test_user_is_created():
@@ -17,5 +16,4 @@ def test_user_is_created():
 
         assert result.email == "test@test.com"
 
-        disconnect()
         # User.drop_collection()
