@@ -8,9 +8,10 @@ user = ObjectType("User")
 user.set_alias("firstName", "first_name")
 user.set_alias("lastName", "last_name")
 
+# TODO: [RESOLVERS] Add auth to all requests
 
 @query.field("allUsers")
-def resolve_all_users(*_):
+def resolve_all_users(_, info):
     # TODO: [RESOLVERS] add pagination to allUsers resolver
     return User.objects.all()
 

@@ -13,14 +13,18 @@ def resolve_register_user(_, info, data):
     """
     user = validate_user_model(data)
 
-    saved_user = user.save()
-
-    payload = JwtPayload(saved_user.email)
+    payload = JwtPayload(user.email)
     encoded_jwt = encode_jwt(payload.get())
 
     token = str(encoded_jwt, encoding="utf8")
+
+    user.access_token = token
+    user.save()
+
     response = {
         "accessToken": token
     }
 
     return response
+
+# TODO: Login, logout resolvers

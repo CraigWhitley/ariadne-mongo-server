@@ -5,6 +5,7 @@ from resolvers.user import resolve_find_user_by_email, \
 from resolvers.auth import resolve_register_user
 from utils.db import register_test_db
 import pytest
+from uuid import uuid4
 
 
 @pytest.fixture(autouse=True)
@@ -16,6 +17,7 @@ def test_user_is_created():
     """Tests whether a user can be added to the database"""
     User.drop_collection()
     User(
+        id=str(uuid4()),
         email="isthisintest@test.com",
         password=hash_password("Somethingover8"),
         first_name="Joe",
@@ -35,7 +37,7 @@ def test_can_find_user_by_email():
 
 def test_can_retrieve_list_of_users():
     """Tests whether a list of all users can be queried"""
-    users = resolve_all_users(None)
+    users = resolve_all_users(None, None)
 
     assert users.first() is not None
 

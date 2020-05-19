@@ -6,6 +6,7 @@ from utils.db import register_test_db
 from utils.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
+from uuid import uuid4
 
 
 @pytest.fixture(autouse=True)
@@ -27,6 +28,7 @@ def test_can_authenticate_password():
     """Tests whether a users hashed password can be authenticated"""
     User.drop_collection()
     User(
+        id=str(uuid4()),
         email="hashpass@test.com",
         password=hash_password("S0meFunkyP455"),
         first_name="Craig",
@@ -61,7 +63,7 @@ def test_invalid_jwt_returns_false():
 
 def test_invalid_jwt_iss_returns_false():
     """Tests that JWT decoding require valid issuer"""
-    payload = JwtPayload("test@test.com", 78, ['user'], False, 'test')
+    payload = JwtPayload("test@test.com", 78, False, 'test')
     encoded_jwt = encode_jwt(payload.get())
 
     decoded = decode_jwt(encoded_jwt)

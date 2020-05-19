@@ -1,6 +1,7 @@
 from modules.user.models import User
 from utils.auth import hash_password
 import re
+from uuid import uuid4
 
 
 email_regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
@@ -11,6 +12,7 @@ password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,128}$)"
 
 def validate_user_model(user_input):
     """Validates the user model"""
+    id = str(uuid4())
     email = user_input["email"]
     password = user_input["password"]
 
@@ -41,6 +43,7 @@ def validate_user_model(user_input):
         raise ValueError("Password must contain 1 uppercase, 1 lowercase, and "
                          "either 1 number or 1 special character.")
     return User(
+        id=id,
         email=email,
         password=hash_password(password),
         first_name=first_name,

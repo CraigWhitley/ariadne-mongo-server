@@ -8,6 +8,7 @@ from resolvers.user import user
 from resolvers.query import query
 from resolvers.mutation import mutation
 
+# TODO: Add logging
 
 load_dotenv()
 

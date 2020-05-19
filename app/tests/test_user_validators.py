@@ -75,4 +75,3 @@ def test_user_email_already_exists_validation(user):
 
     with pytest.raises(ValueError):
         validate_user_model(user)
-

@@ -2,6 +2,7 @@ import bcrypt
 import jwt
 import os
 from utils.enums import JwtStatus
+from settings.app import AppSettings
 
 
 def hash_password(password):
@@ -39,15 +40,12 @@ def decode_jwt(token):
 
     key = os.getenv("JWT_SECRET")
 
-    # TODO: [SETTINGS] JWT issuer
-
     try:
         decoded = jwt.decode(token, key, algorithms='HS256',
-                             issuer='maintesoft',
+                             issuer=AppSettings.JWT_ISSUER,
                              options={'require':
-                                      ['exp', 'iss', 'email', 'roles']})
+                                      ['exp', 'iss', 'email']})
     except jwt.ExpiredSignatureError:
-        # TODO: [JWT] Refresh token
         return JwtStatus.expired
 
     except jwt.InvalidIssuerError:
