@@ -4,6 +4,8 @@ import re
 
 
 email_regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+
+# One uppercase, one lowercase, one number. Min 8, max 128.
 password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,128}$)"
 
 
@@ -55,5 +57,5 @@ def validate_email(email):
 # at least one lower case letter and at least one number or special character.
 def validate_password(password):
     """Ensures password meets security requirements:
-    min 8, max 128, 1 uppercase 1 lowercase 1 number"""
+    min 8, max 128, 1 uppercase, 1 lowercase, 1 number"""
     return bool(re.match(password_regex, password))

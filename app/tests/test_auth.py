@@ -4,12 +4,22 @@ from utils.auth import hash_password, check_password, encode_jwt, \
 from utils.db import register_test_db
 import pytest
 from dotenv import load_dotenv
+from auth.models import JwtPayload
 
 
 @pytest.fixture(autouse=True)
 def setup_db():
     register_test_db()
     load_dotenv()
+
+
+@pytest.fixture
+def encoded_jwt():
+    payload = JwtPayload('test@test.com')
+
+    encoded = encode_jwt(payload.get())
+
+    return encoded
 
 
 def test_can_authenticate_password():
@@ -26,10 +36,15 @@ def test_can_authenticate_password():
     assert check_password("S0meFunkyP455", result.password)
 
 
-def test_can_decode_jwt():
-    """Tests if JWT can be sucessfully decoded"""
-    encoded = encode_jwt({'email': 'test@test.com'})
+def test_can_encode_jwt(encoded_jwt):
+    """Tests if JWT can be encoded"""
 
-    decoded = decode_jwt(encoded)
+    assert isinstance(encoded_jwt, bytes)
+
+
+def test_can_decode_jwt(encoded_jwt):
+    """Tests if JWT can be decoded"""
+
+    decoded = decode_jwt(encoded_jwt)
 
     assert decoded["email"] == "test@test.com"

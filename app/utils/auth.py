@@ -27,6 +27,7 @@ def encode_jwt(payload):
 
 def decode_jwt(token):
     """Returns a decoded JWT's payload"""
+    # TODO: Catch ExpiredSignatureError and refresh token if required
     key = os.getenv("JWT_SECRET")
 
     decoded = jwt.decode(token, key, algorithms='HS256')

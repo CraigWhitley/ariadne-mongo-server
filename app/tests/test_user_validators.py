@@ -10,6 +10,17 @@ def setup_db():
     register_test_db()
 
 
+@pytest.fixture()
+def user():
+    user = {}
+    user["email"] = "correct@email.com"
+    user["password"] = "C0rrectP455@"
+    user["firstName"] = "Jenny"
+    user["lastName"] = "Sandsworth"
+
+    return user
+
+
 def test_correct_email_validates_true():
     """Tests correct email validates to true"""
 
@@ -46,28 +57,17 @@ def test_incorrect_passwords_validate_false():
     )
 
 
-def test_user_model_validates():
+def test_user_model_validates(user):
     """Tests user validator returns user after correct validation"""
     User.drop_collection()
-    user = {}
-    user["email"] = "correct@email.com"
-    user["password"] = "C0rrectP455@"
-    user["firstName"] = "Jenny"
-    user["lastName"] = "Sandsworth"
 
     validated_user = validate_user_model(user)
 
     assert isinstance(validated_user, User)
 
 
-def test_user_email_already_exists_validation():
+def test_user_email_already_exists_validation(user):
     """Tests ValueError thrown when email already exists"""
-
-    user = {}
-    user["email"] = "correct@email.com"
-    user["password"] = "C0rrectP455@"
-    user["firstName"] = "Jenny"
-    user["lastName"] = "Sandsworth"
 
     validated_user = validate_user_model(user)
 
