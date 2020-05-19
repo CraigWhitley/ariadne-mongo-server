@@ -1,10 +1,11 @@
-from user.models import User
+from modules.user.models import User
+from modules.auth.models import JwtPayload
 from utils.auth import hash_password, check_password, encode_jwt, \
                                                         decode_jwt
 from utils.db import register_test_db
+from utils.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
-from auth.models import JwtPayload
 
 
 @pytest.fixture(autouse=True)
@@ -13,7 +14,7 @@ def setup_db():
     load_dotenv()
 
 
-@pytest.fixture
+@pytest.fixture()
 def encoded_jwt():
     payload = JwtPayload('test@test.com')
 
@@ -44,7 +45,35 @@ def test_can_encode_jwt(encoded_jwt):
 
 def test_can_decode_jwt(encoded_jwt):
     """Tests if JWT can be decoded"""
-
     decoded = decode_jwt(encoded_jwt)
 
     assert decoded["email"] == "test@test.com"
+
+
+def test_invalid_jwt_returns_false():
+    """Tests invalid JWT returns false"""
+    encoded = None
+
+    decoded = decode_jwt(encoded)
+
+    assert decoded is JwtStatus.decode_error
+
+
+def test_invalid_jwt_iss_returns_false():
+    """Tests that JWT decoding require valid issuer"""
+    payload = JwtPayload("test@test.com", 78, ['user'], False, 'test')
+    encoded_jwt = encode_jwt(payload.get())
+
+    decoded = decode_jwt(encoded_jwt)
+
+    assert decoded is JwtStatus.invalid_issuer
+
+
+def test_expired_token_returns_false():
+    """Tests expired token returns expired status"""
+    payload = JwtPayload("test@test.com", -1)
+    encoded_jwt = encode_jwt(payload.get())
+
+    decoded = decode_jwt(encoded_jwt)
+
+    assert decoded is JwtStatus.expired

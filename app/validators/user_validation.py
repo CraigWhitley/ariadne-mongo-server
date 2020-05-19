@@ -1,4 +1,4 @@
-from user.models import User
+from modules.user.models import User
 from utils.auth import hash_password
 import re
 

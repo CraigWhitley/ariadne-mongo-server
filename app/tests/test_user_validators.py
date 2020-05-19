@@ -1,6 +1,6 @@
+from modules.user.models import User
 from validators.user_validation import validate_email, validate_user_model, \
                                         validate_password
-from user.models import User
 import pytest
 from utils.db import register_test_db
 
@@ -75,3 +75,4 @@ def test_user_email_already_exists_validation(user):
 
     with pytest.raises(ValueError):
         validate_user_model(user)
+

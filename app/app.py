@@ -6,13 +6,14 @@ import os
 from database.seed import seed_all
 from resolvers.user import user
 from resolvers.query import query
+from resolvers.mutation import mutation
 
 
 load_dotenv()
 
 
 type_defs = load_schema_from_path("schema/")
-schema = make_executable_schema(type_defs, query, user)
+schema = make_executable_schema(type_defs, query, mutation, user)
 
 
 connect(host=os.getenv("MONGO_DEV_URL"), alias='default')

@@ -1,6 +1,6 @@
 from ariadne import ObjectType
-from resolvers.query import query
-from user.models import User
+from .query import query
+from modules.user.models import User
 from validators.user_validation import validate_email
 
 
@@ -11,7 +11,7 @@ user.set_alias("lastName", "last_name")
 
 @query.field("allUsers")
 def resolve_all_users(*_):
-    # TODO: add pagination to allUsers resolver
+    # TODO: [RESOLVERS] add pagination to allUsers resolver
     return User.objects.all()
 
 
