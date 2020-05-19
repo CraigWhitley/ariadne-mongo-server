@@ -1,5 +1,4 @@
 from user.models import User
-from mongoengine.context_managers import switch_db
 from utils.auth import hash_password
 from resolvers.user import resolve_find_user_by_email, \
                             resolve_all_users
@@ -14,24 +13,23 @@ def setup_db():
 
 def test_user_is_created():
     """Tests whether a user can be added to the database"""
-    with switch_db(User, 'test'):
-        User.drop_collection()
-        User(
-            email="test@test.com",
-            password=hash_password("somethingover8"),
-            first_name="Joe",
-            last_name="Johnson",
-        ).save()
-        result = User.objects(email="test@test.com").first()
+    User.drop_collection()
+    User(
+        email="isthisintest@test.com",
+        password=hash_password("Somethingover8"),
+        first_name="Joe",
+        last_name="Johnson",
+    ).save()
+    result = User.objects(email="isthisintest@test.com").first()
 
-        assert result.email == "test@test.com"
+    assert result.email == "isthisintest@test.com"
 
 
 def test_can_find_user_by_email():
     """Tests whether a user can be queried by email"""
-    user = resolve_find_user_by_email(None, None, "test@test.com")
+    user = resolve_find_user_by_email(None, None, "isthisintest@test.com")
 
-    assert user.email == "test@test.com"
+    assert user.email == "isthisintest@test.com"
 
 
 def test_can_retrieve_list_of_users():
