@@ -6,4 +6,3 @@ class JwtStatus(enum.Enum):
     expired = 1
     invalid_issuer = 2
     decode_error = 3
-

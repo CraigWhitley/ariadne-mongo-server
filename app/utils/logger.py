@@ -2,7 +2,6 @@ from modules.logging.models import DbLogEntry
 import datetime as dt
 from uuid import uuid4
 import enum
-import os, sys
 
 
 class LogLevel(enum.Enum):

@@ -4,11 +4,9 @@ from mongoengine import connect
 from dotenv import load_dotenv
 import os
 from database.seed import seed_all
-from resolvers.user import user
-from resolvers.query import query
+from resolvers.query import query, user
 from resolvers.mutation import mutation
 
-# TODO: Add logging
 
 load_dotenv()
 

@@ -31,7 +31,7 @@ def encode_jwt(payload: dict) -> bytes:
     """
     key = os.getenv("JWT_SECRET")
 
-    encoded = jwt.encode(payload, key, algorithm='HS256')
+    encoded = jwt.encode(payload, key, algorithm="HS256")
 
     return encoded
 
@@ -42,25 +42,26 @@ def decode_jwt(token: bytes) -> bytes:
     key = os.getenv("JWT_SECRET")
 
     try:
-        decoded = jwt.decode(token, key, algorithms='HS256',
-                             issuer=AppSettings.JWT_ISSUER,
-                             options={'require':
-                                      ['exp', 'iss', 'email']})
+        decoded = jwt.decode(
+            token,
+            key,
+            algorithms="HS256",
+            issuer=AppSettings.JWT_ISSUER,
+            options={"require": ["exp", "iss", "email"]},
+        )
     except jwt.ExpiredSignatureError:
         return JwtStatus.expired
 
     except jwt.InvalidIssuerError:
         DbLogger(
-            LogLevel.ERROR,
-            __name__,
-            "Attempted to decode token with invalid issuer.").save()
+            LogLevel.ERROR, __name__, "Attempted to "
+                                      "decode token with invalid issuer."
+        ).save()
         return JwtStatus.invalid_issuer
 
     except jwt.InvalidTokenError:
-        DbLogger(
-            LogLevel.WARN,
-            __name__,
-            "Attempted to decode an invalid token").save()
+        DbLogger(LogLevel.WARN, __name__, "Attempted to "
+                                          "decode an invalid token").save()
         return JwtStatus.decode_error
 
     else:
