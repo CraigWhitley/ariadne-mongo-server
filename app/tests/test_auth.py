@@ -7,6 +7,7 @@ from utils.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
 from uuid import uuid4
+from resolvers.auth import resolve_login_user
 
 
 @pytest.fixture(autouse=True)
@@ -79,3 +80,22 @@ def test_expired_token_returns_false():
     decoded = decode_jwt(encoded_jwt)
 
     assert decoded is JwtStatus.expired
+
+
+def test_can_login_user():
+    """Tests successful login returns user"""
+    user = User(
+        id=str(uuid4()),
+        email="login@test.com",
+        password=hash_password("S0meFunkyP455"),
+        first_name="James",
+        last_name="Jamieson",
+    ).save()
+
+    login_input = {}
+    login_input["email"] = user.email
+    login_input["password"] = "S0meFunkyP455"
+
+    logged_in_user = resolve_login_user(None, None, login_input)
+
+    assert logged_in_user.access_token is not None

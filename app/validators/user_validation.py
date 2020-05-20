@@ -33,7 +33,7 @@ def validate_user_model(user_input: dict) -> User:
             raise ValueError("Last name must be a minimum of 8, maximum "
                              "of 50 characters.")
 
-    if User.objects(email__iexact=email):
+    if check_email_exists(email):
         raise ValueError("Email already exists.")
 
     if not validate_email(email):
@@ -49,6 +49,14 @@ def validate_user_model(user_input: dict) -> User:
         first_name=first_name,
         last_name=last_name
     )
+
+
+def check_email_exists(email: str) -> bool:
+    """Checks to see if email exists in database"""
+    if User.objects(email__iexact=email):
+        return True
+    else:
+        return False
 
 
 def validate_email(email: str) -> bool:
