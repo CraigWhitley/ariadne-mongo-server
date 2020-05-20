@@ -13,5 +13,6 @@ class User(Document):
     access_token = StringField(max_length=400)
     updated_at = DateTimeField(default=dt.datetime.now())
     created_at = DateTimeField(default=dt.datetime.now())
+    meta = {"collection": "users"}
 
 # TODO: [ROLES] Implement Roles.

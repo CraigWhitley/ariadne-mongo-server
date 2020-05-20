@@ -3,12 +3,12 @@ from utils.auth import hash_password
 from uuid import uuid4
 
 
-def seed_all():
+def seed_all() -> None:
     User.drop_collection()
     seed_some_users()
 
 
-def seed_some_users():
+def seed_some_users() -> None:
     User(
         id=str(uuid4()),
         email="test@test.com",

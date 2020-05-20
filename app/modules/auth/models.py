@@ -7,7 +7,7 @@ class JwtPayload:
     Constructs the JWT encoding payload.
     Expiration time (in hours) defaults to 78 hours.
     """
-    def __init__(self, email,
+    def __init__(self, email: str,
                  expiration_time=AppSettings.JWT_EXPIRY,
                  admin=False,
                  issuer=AppSettings.JWT_ISSUER):
@@ -18,7 +18,7 @@ class JwtPayload:
                     dt.timedelta(hours=expiration_time))
         self.iss = issuer
 
-    def get(self):
+    def get(self) -> dict:
         payload = {"email": self.email,
                    "admin": self.admin,
                    "exp": self.exp,

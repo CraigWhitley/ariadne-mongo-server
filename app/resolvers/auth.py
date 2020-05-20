@@ -3,13 +3,13 @@ from modules.auth.models import JwtPayload
 from utils.auth import encode_jwt
 
 
-def resolve_register_user(_, info, data):
+def resolve_register_user(_, info, data: dict) -> dict:
     """
     Resolver for registering a new user
     :param data: The users data to register
     :type data: dict
-    :return: UTF8 encoded JWT token
-    :rtype: str
+    :return: UTF8 encoded "accessToken" JWT
+    :rtype: dict
     """
     user = validate_user_model(data)
 

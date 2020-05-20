@@ -3,15 +3,16 @@ import jwt
 import os
 from utils.enums import JwtStatus
 from settings.app import AppSettings
+from utils.logger import DbLogger, LogLevel
 
 
-def hash_password(password):
+def hash_password(password: str) -> str:
     """Returns hashed user password using bcrypt"""
 
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
 
-def check_password(password, hashed_password):
+def check_password(password: str, hashed_password: str) -> bool:
     """Compares users password with hashed password"""
 
     if bcrypt.checkpw(password.encode(), hashed_password.encode()):
@@ -20,7 +21,7 @@ def check_password(password, hashed_password):
         return False
 
 
-def encode_jwt(payload):
+def encode_jwt(payload: dict) -> bytes:
     """
     Returns an encoded JWT token for supplied payload
     :param payload: JWT payload to be encoded
@@ -35,7 +36,7 @@ def encode_jwt(payload):
     return encoded
 
 
-def decode_jwt(token):
+def decode_jwt(token: bytes) -> bytes:
     """Returns a decoded JWT's payload"""
 
     key = os.getenv("JWT_SECRET")
@@ -49,11 +50,17 @@ def decode_jwt(token):
         return JwtStatus.expired
 
     except jwt.InvalidIssuerError:
-        # TODO: [LOG] Log invalid issuer error
+        DbLogger(
+            LogLevel.ERROR,
+            __name__,
+            "Attempted to decode token with invalid issuer.").save()
         return JwtStatus.invalid_issuer
 
     except jwt.InvalidTokenError:
-        # TODO: [LOG] Log invalid token error
+        DbLogger(
+            LogLevel.WARN,
+            __name__,
+            "Attempted to decode an invalid token").save()
         return JwtStatus.decode_error
 
     else:

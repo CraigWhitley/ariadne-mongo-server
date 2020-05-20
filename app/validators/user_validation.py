@@ -10,7 +10,7 @@ email_regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
 password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,128}$)"
 
 
-def validate_user_model(user_input):
+def validate_user_model(user_input: dict) -> User:
     """Validates the user model"""
     id = str(uuid4())
     email = user_input["email"]
@@ -51,14 +51,14 @@ def validate_user_model(user_input):
     )
 
 
-def validate_email(email):
+def validate_email(email: str) -> bool:
     """Ensures an email address is in the correct format"""
     return bool(re.match(email_regex, email))
 
 
 # Password must have at least 8 characters with at least one capital letter,
 # at least one lower case letter and at least one number or special character.
-def validate_password(password):
+def validate_password(password: str) -> bool:
     """Ensures password meets security requirements:
     min 8, max 128, 1 uppercase, 1 lowercase, 1 number"""
     return bool(re.match(password_regex, password))
