@@ -36,7 +36,7 @@ def encode_jwt(payload: dict) -> bytes:
     return encoded
 
 
-def decode_jwt(token: bytes) -> bytes:
+def decode_jwt(token: bytes) -> dict:
     """Returns a decoded JWT's payload"""
 
     key = os.getenv("JWT_SECRET")
@@ -66,3 +66,12 @@ def decode_jwt(token: bytes) -> bytes:
 
     else:
         return decoded
+
+
+def get_token_from_request_header(info: dict) -> str:
+    """Parses the Bearer token from the authorization request header"""
+
+    # TODO: [AUTH] Request token, do some more validation
+    token = info.context["request"].headers['authorization'].split(' ')[1]
+
+    return token
