@@ -2,9 +2,9 @@ from validators.user_validation import validate_user_model, \
                                         check_email_exists, \
                                         validate_email, \
                                         validate_password
-from modules.auth.models import JwtPayload
-from modules.user.models import User
-from utils.auth import encode_jwt, check_password
+from modules.core.auth.models import JwtPayload
+from modules.core.user.models import User
+from modules.core.auth.security import encode_jwt, check_password
 import datetime as dt
 
 

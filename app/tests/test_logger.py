@@ -1,4 +1,4 @@
-from utils.logger import DbLogger, LogLevel
+from modules.logging.client import DbLogger, LogLevel
 
 
 def test_db_logger_can_save_log():

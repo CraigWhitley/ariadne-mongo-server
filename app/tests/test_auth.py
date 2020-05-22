@@ -1,7 +1,7 @@
-from modules.user.models import User
-from modules.auth.models import JwtPayload
-from utils.auth import hash_password, check_password, encode_jwt, \
-                        decode_jwt
+from modules.core.user.models import User
+from modules.core.auth.models import JwtPayload
+from modules.core.auth.security import hash_password, check_password,\
+     encode_jwt, decode_jwt
 from utils.db import register_test_db
 from utils.enums import JwtStatus
 import pytest

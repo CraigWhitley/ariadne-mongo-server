@@ -1,5 +1,5 @@
-from modules.user.models import User
-from utils.auth import hash_password
+from modules.core.user.models import User
+from modules.core.auth.security import hash_password
 import re
 from uuid import uuid4
 

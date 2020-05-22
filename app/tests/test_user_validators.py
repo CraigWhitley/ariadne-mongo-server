@@ -1,4 +1,4 @@
-from modules.user.models import User
+from modules.core.user.models import User
 from validators.user_validation import validate_email, validate_user_model, \
                                         validate_password
 import pytest

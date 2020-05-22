@@ -3,7 +3,8 @@ import jwt
 import os
 from utils.enums import JwtStatus
 from settings.app import AppSettings
-from utils.logger import DbLogger, LogLevel
+from modules.logging.client import DbLogger, LogLevel
+from modules.core.user.models import User
 
 
 def hash_password(password: str) -> str:
@@ -70,8 +71,24 @@ def decode_jwt(token: bytes) -> dict:
 
 def get_token_from_request_header(info: dict) -> str:
     """Parses the Bearer token from the authorization request header"""
-
     # TODO: [AUTH] Request token, do some more validation
+
     token = info.context["request"].headers['authorization'].split(' ')[1]
 
     return token
+
+
+def get_user_from_token(token: str) -> User:
+    """Retrieves the tokens user from the database"""
+    decoded = decode_jwt(token)
+    email = decoded["email"]
+    user = User.objects(email=email).first()
+
+    if user is not None:
+        return user
+    else:
+        DbLogger(LogLevel.ERROR, __name__,
+                 "We decoded a valid token but did not find the user with "
+                 "corresponding email in the database!")
+
+    raise ValueError("User not found.")
