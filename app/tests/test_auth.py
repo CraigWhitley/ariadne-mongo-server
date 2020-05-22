@@ -1,14 +1,14 @@
 from modules.core.user.models import User
 from modules.core.auth.models import JwtPayload
 from modules.core.auth.security import hash_password, check_password,\
-     encode_jwt, decode_jwt
+                                       encode_jwt, decode_jwt
 from utils.db import register_test_db
-from utils.enums import JwtStatus
+from modules.core.auth.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
 from uuid import uuid4
-from resolvers.auth import resolve_login_user
-from settings.app import AppSettings
+from modules.core.auth.repository import login_user
+from modules.core.auth.settings import AuthSettings
 
 
 @pytest.fixture(autouse=True)
@@ -65,7 +65,7 @@ def test_invalid_jwt_returns_false():
 
 def test_invalid_jwt_iss_returns_false():
     """Tests that JWT decoding require valid issuer"""
-    payload = JwtPayload("tes@test.com", AppSettings.JWT_EXPIRY, False, 'test')
+    payload = JwtPayload("tes@test.com", AuthSettings.JWT_EXPIRY, False, 'test')
     encoded_jwt = encode_jwt(payload.get())
 
     decoded = decode_jwt(encoded_jwt)
@@ -97,8 +97,7 @@ def test_can_login_user():
     login_input["email"] = user.email
     login_input["password"] = "S0meFunkyP455"
 
-    logged_in_user = resolve_login_user(None, None, login_input)
+    logged_in_user = login_user(login_input)
 
     assert logged_in_user.access_token is not None
 
-# TODO: [TEST] Query: me test

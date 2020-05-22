@@ -1,5 +1,5 @@
 from modules.core.user.models import User
-from validators.user_validation import validate_email, validate_user_model, \
+from modules.core.user.validators import validate_email, validate_user_model, \
                                         validate_password
 import pytest
 from utils.db import register_test_db

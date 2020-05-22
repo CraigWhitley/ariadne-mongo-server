@@ -4,6 +4,17 @@ type User {
   firstName: String!
   lastName: String!
   accessToken: String
+  roles: [Role!]!
+}
+
+type Permission {
+    route: String!
+}
+
+type Role {
+    id: ID!
+    name: String!
+    permissions: [Permission]!
 }
 
 extend type Query {

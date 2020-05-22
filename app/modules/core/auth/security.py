@@ -1,10 +1,13 @@
 import bcrypt
 import jwt
 import os
-from utils.enums import JwtStatus
-from settings.app import AppSettings
+from .enums import JwtStatus
 from modules.logging.client import DbLogger, LogLevel
 from modules.core.user.models import User
+import functools
+from graphql import GraphQLResolveInfo
+from modules.core.role.errors import UnauthorizedError
+from .settings import AuthSettings
 
 
 def hash_password(password: str) -> str:
@@ -47,7 +50,7 @@ def decode_jwt(token: bytes) -> dict:
             token,
             key,
             algorithms="HS256",
-            issuer=AppSettings.JWT_ISSUER,
+            issuer=AuthSettings.JWT_ISSUER,
             options={"require": ["exp", "iss", "email"]},
         )
     except jwt.ExpiredSignatureError:
@@ -69,18 +72,20 @@ def decode_jwt(token: bytes) -> dict:
         return decoded
 
 
-def get_token_from_request_header(info: dict) -> str:
+def get_token_from_request_header(context: dict) -> str:
     """Parses the Bearer token from the authorization request header"""
     # TODO: [AUTH] Request token, do some more validation
 
-    token = info.context["request"].headers['authorization'].split(' ')[1]
+    token = context["request"].headers["authorization"].split(' ')[1]
 
     return token
 
 
 def get_user_from_token(token: str) -> User:
     """Retrieves the tokens user from the database"""
+
     decoded = decode_jwt(token)
+
     email = decoded["email"]
     user = User.objects(email=email).first()
 
@@ -92,3 +97,38 @@ def get_user_from_token(token: str) -> User:
                  "corresponding email in the database!")
 
     raise ValueError("User not found.")
+
+
+# TODO: [TEST] authenticate(permission) decorator
+def authenticate(permission):
+    """
+    Decorator to authenticate queries and mutations on a
+    route-by-route basis using the users request JWT token.
+    """
+    def decorator_repeat(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+
+            request = None
+
+            for x in args:
+                if isinstance(x, GraphQLResolveInfo):
+                    request = x
+
+            token = get_token_from_request_header(request.context)
+
+            if token is None:
+                raise UnauthorizedError("Access denied.")
+
+            user = get_user_from_token(token)
+
+            if user is None:
+                raise UnauthorizedError("Access denied.")
+
+            print("Permissions: " + user.roles.permissions[0].route)
+
+            value = func(*args, **kwargs)
+
+            return value
+        return wrapper
+    return decorator_repeat

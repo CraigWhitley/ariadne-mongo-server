@@ -1,5 +1,5 @@
 import datetime as dt
-from settings.app import AppSettings
+from .settings import AuthSettings
 
 
 class JwtPayload:
@@ -8,9 +8,9 @@ class JwtPayload:
     Expiration time (in hours) defaults to 78 hours.
     """
     def __init__(self, email: str,
-                 expiration_time=AppSettings.JWT_EXPIRY,
+                 expiration_time=AuthSettings.JWT_EXPIRY,
                  admin=False,
-                 issuer=AppSettings.JWT_ISSUER):
+                 issuer=AuthSettings.JWT_ISSUER):
 
         self.email = email
         self.admin = admin
