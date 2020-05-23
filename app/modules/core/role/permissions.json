@@ -1,0 +1,6 @@
+{
+    "get_all_roles": {
+        "route": "role:get_all_roles",
+        "description": "Allow a user to retrieve a list of all roles."
+    }
+}

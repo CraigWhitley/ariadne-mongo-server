@@ -3,10 +3,10 @@ from ariadne.asgi import GraphQL
 from mongoengine import connect
 from dotenv import load_dotenv
 import os
-from database.seed import seed_all
+# from database.seed import seed_all
 from resolvers.query import query, user
 from resolvers.mutation import mutation
-
+from modules.core.permissions.permissions_loader import load_all_permissions
 
 load_dotenv()
 
@@ -18,7 +18,12 @@ schema = make_executable_schema(type_defs, query, mutation, user)
 connect(host=os.getenv("MONGO_DEV_URL"), alias='default')
 
 
-seed_all()
+# seed_all()
 
+permissions = load_all_permissions(__file__)
+
+for key in permissions:
+    print(key)
+    print(permissions[key])
 
 app = GraphQL(schema, debug=True)

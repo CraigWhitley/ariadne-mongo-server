@@ -15,7 +15,6 @@ def resolve_register_user(_, info, data: dict) -> User:
     return user
 
 
-# TODO: [AUTH] Login retry attempts, general login security
 def resolve_login_user(_, info, data: dict) -> User:
     """
     Resolver for logging in a user
@@ -23,3 +22,4 @@ def resolve_login_user(_, info, data: dict) -> User:
     user = login_user(data)
 
     return user
+

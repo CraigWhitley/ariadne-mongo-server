@@ -4,20 +4,20 @@ type User {
   firstName: String!
   lastName: String!
   accessToken: String
+  blacklist: [Permission]
   roles: [Role!]!
 }
 
-type Permission {
-    route: String!
-}
-
-type Role {
-    id: ID!
-    name: String!
-    permissions: [Permission]!
+input UserRoleInput {
+    userId: String!
+    roleId: String!
 }
 
 extend type Query {
     allUsers(skip: Int!, take: Int!): [User!]!
     findUserByEmail(email: String!):User
+}
+
+extend type Mutation {
+    addRoleToUser(data: UserRoleInput!): User
 }

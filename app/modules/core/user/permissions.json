@@ -1,0 +1,21 @@
+{
+    "me": {
+        "route": "user:me",
+        "description": "Allow a user to retrieve their account information."
+    },
+
+    "get_users_permissions": {
+        "route": "user:get_users_permissions",
+        "description": "Get a list of all a users permissions."
+    },
+
+    "all_users": {
+        "route": "user:all_users",
+        "description": "Allow user to retrieve a list of all users."
+    },
+    
+    "find_user_by_email": {
+        "route": "users:find_user_by_email",
+        "description": "Allow user to retrieve any user by their email."
+    }
+}

@@ -74,7 +74,9 @@ def decode_jwt(token: bytes) -> dict:
 
 def get_token_from_request_header(context: dict) -> str:
     """Parses the Bearer token from the authorization request header"""
-    # TODO: [AUTH] Request token, do some more validation
+
+    if "authorization" not in context["request"].headers:
+        raise ValueError("Unauthorized. Please login.")
 
     token = context["request"].headers["authorization"].split(' ')[1]
 
@@ -109,6 +111,8 @@ def authenticate(permission):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
 
+            error = "You do not have permission to access this resource."
+
             request = None
 
             for x in args:
@@ -118,17 +122,23 @@ def authenticate(permission):
             token = get_token_from_request_header(request.context)
 
             if token is None:
-                raise UnauthorizedError("Access denied.")
+                raise UnauthorizedError(error)
 
             user = get_user_from_token(token)
 
             if user is None:
-                raise UnauthorizedError("Access denied.")
+                raise UnauthorizedError(error)
 
-            print("Permissions: " + user.roles.permissions[0].route)
+            for perm in user.blacklist:
+                if perm.route == permission:
+                    raise UnauthorizedError(error)
 
-            value = func(*args, **kwargs)
+            for role in user.roles:
+                for perm in role.permissions:
+                    if perm.route == permission:
+                        value = func(*args, **kwargs)
+                        return value
 
-            return value
+            raise UnauthorizedError(error)
         return wrapper
     return decorator_repeat

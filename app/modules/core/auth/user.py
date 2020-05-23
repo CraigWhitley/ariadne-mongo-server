@@ -20,6 +20,7 @@ def register_user(data: dict):
     return user
 
 
+# TODO: [AUTH] Login retry attempts, general login security
 def login_user(data: dict):
     email = data["email"]
     password = data["password"]
