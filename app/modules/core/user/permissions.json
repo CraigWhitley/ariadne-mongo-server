@@ -13,9 +13,9 @@
         "route": "user:all_users",
         "description": "Allow user to retrieve a list of all users."
     },
-    
+
     "find_user_by_email": {
-        "route": "users:find_user_by_email",
+        "route": "user:find_user_by_email",
         "description": "Allow user to retrieve any user by their email."
     }
 }

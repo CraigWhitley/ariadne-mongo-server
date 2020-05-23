@@ -20,7 +20,7 @@ connect(host=os.getenv("MONGO_DEV_URL"), alias='default')
 
 # seed_all()
 
-permissions = load_all_permissions(__file__)
+permissions = load_all_permissions(__file__, "json")
 
 for key in permissions:
     print(key)

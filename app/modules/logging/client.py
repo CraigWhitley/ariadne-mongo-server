@@ -12,6 +12,7 @@ class LogLevel(enum.Enum):
     ERROR = "ERROR"
 
 
+# TODO: [REFACTOR] More generic logger for files, diff db's etc.
 class DbLogger:
     def __init__(self,
                  level: LogLevel,
