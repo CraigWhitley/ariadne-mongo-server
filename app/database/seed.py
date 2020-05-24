@@ -1,7 +1,5 @@
 from modules.core.user.models import User
 from modules.core.role.models import Role, Permission
-from modules.core.role.permissions import PermissionsList, \
-                                          PermissionsDict
 from modules.core.auth.security import hash_password
 from uuid import uuid4
 from faker import Faker
@@ -9,43 +7,35 @@ import random
 
 fake = Faker()
 roles = []
-permissions = []
+permissions = {}
 
 
-# TODO [ROLES] Finish off this idea of mixing enums and dict
-def seed_all() -> None:
+def seed_all(all_permissions: dict) -> None:
     User.drop_collection()
     Role.drop_collection()
     Permission.drop_collection()
-    seed_roles_and_permissions()
+    seed_roles_and_permissions(all_permissions)
     seed_some_users()
 
 
-def seed_roles_and_permissions(amount=5):
+def seed_roles_and_permissions(all_permissions: dict, amount=5):
 
-    for per in PermissionsList:
-        permissions.append(
-            Permission(
+    for data in all_permissions:
+        permissions[data] = Permission(
                 id=str(uuid4()),
-                route=per["route"],
-                description=per["description"]
-            ).save()
-        )
-
-    test_perms = {}
-
-    test_perms["get_all_roles"] = Permission(
-        id=str(uuid4()),
-        route="role:get_all_roles",
-        description="Get a list of all roles."
-    ).save()
+                route=all_permissions[data]["route"],
+                description=all_permissions[data]["description"]
+        ).save()
 
     roles.append(
         Role(
             id=str(uuid4()),
             name="Admin",
-            permissions=[permissions[0], permissions[1], permissions[2],
-                         test_perms["get_all_roles"]]
+            permissions=[permissions["all_users"],
+                         permissions["me"],
+                         permissions["get_users_permissions"],
+                         permissions["find_user_by_email"],
+                         permissions["get_all_roles"]]
         ).save()
     )
 
@@ -53,7 +43,7 @@ def seed_roles_and_permissions(amount=5):
         Role(
             id=str(uuid4()),
             name="User",
-            permissions=[permissions[1]]
+            permissions=[permissions["me"]]
         ).save()
     )
 
@@ -65,7 +55,7 @@ def seed_some_users(amount=50) -> None:
         password=hash_password("FunkyP455"),
         first_name="Craig",
         last_name="Whitley",
-        blacklist=[permissions[1]],
+        blacklist=[permissions["find_user_by_email"]],
         roles=[roles[0]]
     ).save()
 

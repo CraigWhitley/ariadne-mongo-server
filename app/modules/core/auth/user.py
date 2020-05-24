@@ -8,6 +8,7 @@ from modules.core.auth.security import encode_jwt, check_password
 import datetime as dt
 
 
+# TODO: [TEST] auth/user
 def register_user(data: dict):
     user = validate_user_model(data)
 

@@ -1,7 +1,7 @@
 # maintesoft-server
 Ariadne GraphQL backend for Maintesoft
 
-app/.env:=
+.env:=
 
 MONGO_DEV_URL=<dev_mongo_db>
 

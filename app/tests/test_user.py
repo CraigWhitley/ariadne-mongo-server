@@ -1,7 +1,6 @@
 from modules.core.user.models import User
 from modules.core.auth.security import hash_password, \
                                         encode_jwt
-from utils.db import register_test_db
 import pytest
 from uuid import uuid4
 from faker import Faker
@@ -10,14 +9,16 @@ from modules.core.auth.repository import register_user
 from modules.core.user.repository import fetch_all_users, \
                                         find_user_by_email, me
 from .mock_models import mock_context
-from graphql import GraphQLResolveInfo
+from .setup import register_test_db, register_test_injections, teardown
+
 
 faker = Faker()
 
 
 @pytest.fixture(autouse=True)
-def setup_db():
+def setup():
     register_test_db()
+    register_test_injections()
 
 
 def generate_user():
@@ -103,3 +104,7 @@ def test_resolve_me():
     resolved_user = me(request)
 
     assert user.email == resolved_user.email
+
+
+def tests_teardown():
+    teardown()

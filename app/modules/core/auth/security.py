@@ -2,14 +2,18 @@ import bcrypt
 import jwt
 import os
 from .enums import JwtStatus
-from modules.logging.client import DbLogger, LogLevel
+from modules.core.logging.logging_service import LoggingService
+from modules.core.logging.models import LogEntry, LogLevel
 from modules.core.user.models import User
 import functools
 from graphql import GraphQLResolveInfo
 from modules.core.role.errors import UnauthorizedError
 from .settings import AuthSettings
 
+logger = LoggingService(True)
 
+
+# TODO: [TEST] auth/security coverage = 60%
 def hash_password(password: str) -> str:
     """Returns hashed user password using bcrypt"""
 
@@ -54,19 +58,25 @@ def decode_jwt(token: bytes) -> dict:
             options={"require": ["exp", "iss", "email"]},
         )
     except jwt.ExpiredSignatureError:
-        return JwtStatus.expired
+        logger.log(LogEntry(
+         LogLevel.INFO,
+         __name__,
+         "JWT Token expired for user."))
+        return JwtStatus.EXPIRED
 
     except jwt.InvalidIssuerError:
-        DbLogger(
-            LogLevel.ERROR, __name__, "Attempted to "
-                                      "decode token with invalid issuer."
-        ).save()
-        return JwtStatus.invalid_issuer
+        logger.log(LogEntry(
+         LogLevel.ERROR,
+         __name__,
+         "Attempted to decode token with invalid issuer."))
+        return JwtStatus.INVALID_ISSUER
 
     except jwt.InvalidTokenError:
-        DbLogger(LogLevel.WARN, __name__, "Attempted to "
-                                          "decode an invalid token").save()
-        return JwtStatus.decode_error
+        logger.log(LogEntry(
+         LogLevel.ERROR,
+         __name__,
+         "JWT decoding error when trying to decode token."))
+        return JwtStatus.DECODE_ERROR
 
     else:
         return decoded
@@ -76,6 +86,7 @@ def get_token_from_request_header(context: dict) -> str:
     """Parses the Bearer token from the authorization request header"""
 
     if "authorization" not in context["request"].headers:
+        # TODO: [AUTH] Log the attempts from context?
         raise ValueError("Unauthorized. Please login.")
 
     token = context["request"].headers["authorization"].split(' ')[1]
@@ -94,9 +105,11 @@ def get_user_from_token(token: str) -> User:
     if user is not None:
         return user
     else:
-        DbLogger(LogLevel.ERROR, __name__,
-                 "We decoded a valid token but did not find the user with "
-                 "corresponding email in the database!")
+        logger.log(LogEntry(
+                   LogLevel.ERROR,
+                   __name__,
+                   "We decoded a valid token but did not find the "
+                   "user with corresponding email in the database!"))
 
     raise ValueError("User not found.")
 
@@ -112,7 +125,6 @@ def authenticate(permission):
         def wrapper(*args, **kwargs):
 
             error = "You do not have permission to access this resource."
-
             request = None
 
             for x in args:
@@ -129,9 +141,21 @@ def authenticate(permission):
             if user is None:
                 raise UnauthorizedError(error)
 
+            # blacklist takes precedence
             for perm in user.blacklist:
                 if perm.route == permission:
+                    logger.log(LogEntry(
+                        LogLevel.WARN,
+                        __name__,
+                        "User {} tried to access blacklisted route"
+                        .format(user.email)
+                    ))
                     raise UnauthorizedError(error)
+
+            for perm in user.whitelist:
+                if perm.route == permission:
+                    value = func(*args, **kwargs)
+                    return value
 
             for role in user.roles:
                 for perm in role.permissions:
@@ -139,6 +163,11 @@ def authenticate(permission):
                         value = func(*args, **kwargs)
                         return value
 
+            logger.log(LogEntry(
+                        LogLevel.WARN,
+                        __name__,
+                        "User {} tried to access route with no permission."
+                        .format(user.email)))
             raise UnauthorizedError(error)
         return wrapper
     return decorator_repeat

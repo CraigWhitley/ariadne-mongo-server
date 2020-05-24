@@ -2,12 +2,12 @@ from modules.core.user.models import User
 from modules.core.user.validators import validate_email, validate_user_model, \
                                         validate_password
 import pytest
-from utils.db import register_test_db
-
+from .setup import register_test_db, register_test_injections, teardown
 
 @pytest.fixture(autouse=True)
-def setup_db():
+def setup():
     register_test_db()
+    register_test_injections()
 
 
 @pytest.fixture()
@@ -75,3 +75,7 @@ def test_user_email_already_exists_validation(user):
 
     with pytest.raises(ValueError):
         validate_user_model(user)
+
+
+def tests_teardown():
+    teardown()

@@ -4,6 +4,7 @@ type User {
   firstName: String!
   lastName: String!
   accessToken: String
+  whitelist: [Permission]
   blacklist: [Permission]
   roles: [Role!]!
 }

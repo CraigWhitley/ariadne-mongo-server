@@ -8,7 +8,15 @@ from modules.core.auth.security import encode_jwt, check_password
 import datetime as dt
 
 
+class AuthRepository:
+    pass
+
+
+# TODO: [TEST] auth/repository test coverage. Currently 83%
 def register_user(data: dict):
+    """
+    Allows a user to register a new account.
+    """
     user = validate_user_model(data)
 
     token = _get_token(user.email)
@@ -21,6 +29,9 @@ def register_user(data: dict):
 
 
 def login_user(data: dict):
+    """
+    Allows a user to login with email and password.
+    """
     email = data["email"]
     password = data["password"]
 
@@ -59,7 +70,9 @@ def login_user(data: dict):
 
 
 def _get_token(email: str) -> str:
-    """Gets encoded JWT token as a string from email"""
+    """
+    Gets encoded JWT token as a UTF8 string from email input.
+    """
     payload = JwtPayload(email)
     encoded_jwt = encode_jwt(payload.get())
 

@@ -3,6 +3,14 @@ from os import walk
 import json
 
 
+class FileLoader:
+    """
+    Reusable class to load files from the system
+    """
+    pass
+
+
+# TODO: [TEST] load_all_permissions()
 def load_all_permissions(path, file_type):
     module_path = Path(path).parent / "modules/"
 

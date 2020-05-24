@@ -13,6 +13,7 @@ class User(Document):
     first_name = StringField(max_length=50, min_length=2)
     last_name = StringField(max_length=50, min_length=2)
     is_active = BooleanField(default=True)
+    whitelist = ListField(ReferenceField(Permission, reverse_delete_rule=PULL))
     blacklist = ListField(ReferenceField(Permission, reverse_delete_rule=PULL))
     roles = ListField(ReferenceField(Role, reverse_delete_rule=PULL))
     access_token = StringField(max_length=400)

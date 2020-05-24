@@ -11,6 +11,5 @@ input LoginInput {
 }
 
 extend type Mutation {
-    loginUser(data: LoginInput!): User!
     registerUser(data: RegisterUserInput!):User!
 }

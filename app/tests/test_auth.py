@@ -2,18 +2,19 @@ from modules.core.user.models import User
 from modules.core.auth.models import JwtPayload
 from modules.core.auth.security import hash_password, check_password,\
                                        encode_jwt, decode_jwt
-from utils.db import register_test_db
 from modules.core.auth.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
 from uuid import uuid4
-from modules.core.auth.repository import login_user
+from modules.core.auth.repository import login_user, _get_token
 from modules.core.auth.settings import AuthSettings
+from .setup import register_test_db, register_test_injections, teardown
 
 
 @pytest.fixture(autouse=True)
-def setup_db():
+def setup():
     register_test_db()
+    register_test_injections()
     load_dotenv()
 
 
@@ -60,17 +61,18 @@ def test_invalid_jwt_returns_false():
 
     decoded = decode_jwt(encoded)
 
-    assert decoded is JwtStatus.decode_error
+    assert decoded is JwtStatus.DECODE_ERROR
 
 
 def test_invalid_jwt_iss_returns_false():
     """Tests that JWT decoding require valid issuer"""
-    payload = JwtPayload("tes@test.com", AuthSettings.JWT_EXPIRY, False, 'test')
+    payload = JwtPayload("tes@test.com", AuthSettings.JWT_EXPIRY,
+                         False, 'test')
     encoded_jwt = encode_jwt(payload.get())
 
     decoded = decode_jwt(encoded_jwt)
 
-    assert decoded is JwtStatus.invalid_issuer
+    assert decoded is JwtStatus.INVALID_ISSUER
 
 
 def test_expired_token_returns_false():
@@ -80,7 +82,7 @@ def test_expired_token_returns_false():
 
     decoded = decode_jwt(encoded_jwt)
 
-    assert decoded is JwtStatus.expired
+    assert decoded is JwtStatus.EXPIRED
 
 
 def test_can_login_user():
@@ -101,3 +103,18 @@ def test_can_login_user():
 
     assert logged_in_user.access_token is not None
 
+
+def test_can_retrieve_jwt_string_from_email():
+    """
+    Tests whether a JWT token can be encoded from an
+    email input as a UTF8 string.
+    """
+
+    email = "test@test.com"
+    jwt_result = _get_token(email)
+
+    assert isinstance(jwt_result, str)
+
+
+def tests_teardown():
+    teardown()
