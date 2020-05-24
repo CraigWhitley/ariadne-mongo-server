@@ -5,7 +5,6 @@ from .role import resolve_get_all_roles, resolve_get_all_permissions
 
 query = QueryType()
 
-# TODO: [REFACTOR] Move into/graphql/ folder
 
 query.set_field("allUsers", resolve_all_users)
 query.set_field("findUserByEmail", resolve_find_user_by_email)

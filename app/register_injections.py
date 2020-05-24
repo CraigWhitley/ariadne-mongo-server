@@ -1,8 +1,9 @@
 from modules.core.logging.logger_interface import ILoggingClient
 from modules.core.logging.mongo_client import MongoDbLogger
+from modules.core.database.database_interface import IDatabaseClient
+from modules.core.database.mongo_client import MongoDbClient
 
 
-class InjectionService:
-
-    def services_config(self, binder):
-        binder.bind(ILoggingClient, MongoDbLogger())
+def services_config(binder):
+    binder.bind(ILoggingClient, MongoDbLogger())
+    binder.bind(IDatabaseClient, MongoDbClient())

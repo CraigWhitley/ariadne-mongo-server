@@ -6,6 +6,9 @@ import inject
 
 
 class LoggingService:
+    """
+    Service to log messsages and errors throughout the app.
+    """
     _client = inject.attr(ILoggingClient)
 
     def __init__(self,
@@ -47,7 +50,7 @@ class LoggingService:
         """Format the log entry into a single-line string"""
         formatted = ("{} - {} "
                      "- {} - {}".format(
-                      entry.created_at.strftime(" %H:%M:%S %d-%m-%Y"),
+                      entry.created_at.strftime("%H:%M:%S %d-%m-%Y"),
                       entry.level.value,
                       entry.context,
                       entry.message))
