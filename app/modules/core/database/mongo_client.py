@@ -3,6 +3,7 @@ from .models import ConnectionInput
 from mongoengine import connect as conn, disconnect as disc
 
 
+# TODO: [TEST] Fully test the database module
 class MongoDbClient(IDatabaseClient):
     """
     Mongodb client.
@@ -26,10 +27,9 @@ class MongoDbClient(IDatabaseClient):
         if connection.name is not None:
             connection_info["name"] = connection.name
 
-        # FIXME: [DBCLIENT] Work out how to put the kwargs in
- 
         conn(host=host,
-             alias=alias)
+             alias=alias,
+             **connection_info)
 
     def disconnect(self, connection: ConnectionInput):
         """
