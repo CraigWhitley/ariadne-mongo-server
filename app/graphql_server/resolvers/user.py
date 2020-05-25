@@ -25,3 +25,10 @@ def resolve_me(_, info) -> User:
     user = _repo.me(info)
 
     return user
+
+
+@authenticate("user:get_users_permissions")
+def resolve_get_users_permissions(_, info, email: str):
+    permissions = _repo.get_users_permissions(email)
+
+    return permissions

@@ -6,7 +6,7 @@ from database.seed import seed_all
 from graphql_server.resolvers.query import query, user
 from graphql_server.resolvers.mutation import mutation
 from modules.core.permissions.permissions_loader import load_all_permissions
-from register_injections import services_config
+from config.register_injectors import services_config
 import inject
 from modules.core.database.db_service import DatabaseService
 from modules.core.database.models import ConnectionInput
