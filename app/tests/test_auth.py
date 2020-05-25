@@ -6,9 +6,11 @@ from modules.core.auth.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
 from uuid import uuid4
-from modules.core.auth.repository import login_user, _get_token
+from modules.core.auth.repository import AuthRepository
 from modules.core.auth.settings import AuthSettings
 from .setup import register_test_db, register_test_injections, teardown
+
+_repo = AuthRepository()
 
 
 @pytest.fixture(autouse=True)
@@ -99,7 +101,7 @@ def test_can_login_user():
     login_input["email"] = user.email
     login_input["password"] = "S0meFunkyP455"
 
-    logged_in_user = login_user(login_input)
+    logged_in_user = _repo.login_user(login_input)
 
     assert logged_in_user.access_token is not None
 
@@ -111,7 +113,7 @@ def test_can_retrieve_jwt_string_from_email():
     """
 
     email = "test@test.com"
-    jwt_result = _get_token(email)
+    jwt_result = _repo._get_token(email)
 
     assert isinstance(jwt_result, str)
 

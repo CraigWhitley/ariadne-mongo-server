@@ -10,9 +10,6 @@ class DatabaseService:
 
     _client = inject.attr(IDatabaseClient)
 
-    def __init__(self):
-        pass
-
     def connect(self, connection: ConnectionInput):
         """
         Connect to the database in the injected client.

@@ -1,6 +1,6 @@
 class ConnectionInput:
     """
-    Model of a generic database input.
+    Model of a generic database connection.
     """
     def __init__(self,
                  hostname: str = "localhost",
@@ -8,7 +8,7 @@ class ConnectionInput:
                  location: str = None,
                  username: str = None,
                  password: str = None,
-                 name: str = None,
+                 db_name: str = None,
                  alias: str = "default"):
 
         self.hostname = hostname
@@ -17,4 +17,4 @@ class ConnectionInput:
         self.username = username
         self.password = password
         self.alias = alias
-        self.name = name
+        self.db_name = db_name

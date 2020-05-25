@@ -24,8 +24,8 @@ class MongoDbClient(IDatabaseClient):
             connection_info["username"] = connection.username
             connection_info["password"] = connection.password
 
-        if connection.name is not None:
-            connection_info["name"] = connection.name
+        if connection.db_name is not None:
+            connection_info["name"] = connection.db_name
 
         conn(host=host,
              alias=alias,

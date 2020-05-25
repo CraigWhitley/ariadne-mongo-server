@@ -3,68 +3,67 @@ from modules.core.user.models import User
 from uuid import uuid4
 
 
-def get_all_roles():
-    return Role.objects.all()
+class RoleRepository:
 
+    def get_all_roles(self):
+        return Role.objects.all()
 
-def get_all_permission():
-    return Permission.objects.all()
+    def get_all_permission(self):
+        return Permission.objects.all()
 
+    def add_permission_to_role(self, data: dict) -> Role:
 
-def add_permission_to_role(data: dict) -> Role:
+        permission_id = data["permissionId"]
+        role_id = data["roleId"]
 
-    permission_id = data["permissionId"]
-    role_id = data["roleId"]
+        permission = Permission.objects(id=permission_id).first()
 
-    permission = Permission.objects(id=permission_id).first()
+        if permission is None:
+            raise ValueError("Permission not found.")
 
-    if permission is None:
-        raise ValueError("Permission not found.")
+        count = Role.objects(id=role_id).update_one(
+                                         push__permissions=permission)
 
-    count = Role.objects(id=role_id).update_one(push__permissions=permission)
+        role = None
 
-    role = None
+        if count > 0:
+            role = Role.objects(id=role_id).first()
+        else:
+            raise ValueError("Role not found. No permissions updated.")
 
-    if count > 0:
+        return role
+
+    def add_role_to_user(self, data: dict) -> User:
+        user_id = data["userId"]
+        role_id = data["roleId"]
+
+        if user_id is None:
+            raise ValueError("User id must be supplied.")
+
+        if role_id is None:
+            raise ValueError("Role id must be supplied")
+
         role = Role.objects(id=role_id).first()
-    else:
-        raise ValueError("Role not found. No permissions updated.")
 
-    return role
+        if role is None:
+            raise ValueError("Role not found.")
 
+        count = User.objects(id=user_id).update_one(push__roles=role)
 
-def add_role_to_user(data: dict) -> User:
-    user_id = data["userId"]
-    role_id = data["roleId"]
+        if count == 0:
+            raise ValueError("User not found. No roles updated.")
 
-    if user_id is None:
-        raise ValueError("User id must be supplied.")
+        user = User.objects(id=user_id).first()
 
-    if role_id is None:
-        raise ValueError("Role id must be supplied")
+        return user
 
-    role = Role.objects(id=role_id).first()
+    def create_new_role(self, name: str) -> Role:
+        if name is None:
+            raise ValueError("Role name must be provided.")
 
-    if role is None:
-        raise ValueError("Role not found.")
+        role = Role(
+            id=str(uuid4()),
+            name=name
+        ).save()
 
-    count = User.objects(id=user_id).update_one(push__roles=role)
-
-    if count == 0:
-        raise ValueError("User not found. No roles updated.")
-
-    user = User.objects(id=user_id).first()
-
-    return user
-
-
-def create_new_role(name: str) -> Role:
-    if name is None:
-        raise ValueError("Role name must be provided.")
-
-    role = Role(
-        id=str(uuid4()),
-        name=name
-    ).save()
-
-    return role
+        return role

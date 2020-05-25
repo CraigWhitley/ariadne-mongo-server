@@ -5,14 +5,15 @@ import pytest
 from uuid import uuid4
 from faker import Faker
 from modules.core.auth.models import JwtPayload
-from modules.core.auth.repository import register_user
-from modules.core.user.repository import fetch_all_users, \
-                                        find_user_by_email, me
+from modules.core.auth.repository import AuthRepository
+from modules.core.user.repository import UserRepository
 from .mock_models import mock_context
 from .setup import register_test_db, register_test_injections, teardown
 
 
 faker = Faker()
+_user_repo = UserRepository()
+_auth_repo = AuthRepository()
 
 
 @pytest.fixture(autouse=True)
@@ -52,7 +53,7 @@ def test_can_find_user_by_email():
     user = generate_user()
     user.save()
 
-    result = find_user_by_email(user.email)
+    result = _user_repo.find_user_by_email(user.email)
 
     assert result.email == user.email
 
@@ -61,7 +62,7 @@ def test_can_retrieve_list_of_users():
     """Tests whether a list of all users can be queried"""
     user = generate_user()
     user.save()
-    users = fetch_all_users()
+    users = _user_repo.fetch_all_users()
 
     assert users.first() is not None
 
@@ -74,7 +75,7 @@ def test_register_user_returns_correct_users_email():
     user["firstName"] = "Jenny"
     user["lastName"] = "Sandsworth"
 
-    register_user(user)
+    _auth_repo.register_user(user)
 
     result = User.objects(email="correct@email.com").first()
 
@@ -101,7 +102,7 @@ def test_resolve_me():
 
     request = mock_context(headers)
 
-    resolved_user = me(request)
+    resolved_user = _user_repo.me(request)
 
     assert user.email == resolved_user.email
 
