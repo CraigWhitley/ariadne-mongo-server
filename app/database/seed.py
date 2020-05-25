@@ -35,7 +35,12 @@ def seed_roles_and_permissions(all_permissions: dict, amount=5):
                          permissions["me"],
                          permissions["get_users_permissions"],
                          permissions["find_user_by_email"],
-                         permissions["get_all_roles"]]
+                         permissions["get_all_roles"],
+                         permissions["add_permission_to_role"],
+                         permissions["add_role_to_user"],
+                         permissions["get_all_permissions"],
+                         permissions["create_new_role"],
+                         permissions["create_new_permission"]]
         ).save()
     )
 

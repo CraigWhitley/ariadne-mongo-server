@@ -7,13 +7,15 @@ from faker import Faker
 from modules.core.auth.models import JwtPayload
 from modules.core.auth.repository import AuthRepository
 from modules.core.user.repository import UserRepository
+from modules.core.role.repository import RoleRepository
 from .mock_models import mock_context
-from .setup import register_test_db, register_test_injections, teardown
-
+from .setup import register_test_db, register_test_injections, \
+                   teardown
 
 faker = Faker()
 _user_repo = UserRepository()
 _auth_repo = AuthRepository()
+_role_repo = RoleRepository()
 
 
 @pytest.fixture(autouse=True)
@@ -105,6 +107,29 @@ def test_resolve_me():
     resolved_user = _user_repo.me(request)
 
     assert user.email == resolved_user.email
+
+
+# def test_can_get_all_users_permissions():
+#     load_permissions()
+
+#     user = generate_user()
+
+#     test_role = _role_repo.create_new_role("Test")
+
+#     permissions = _role_repo.get_all_permission()
+
+#     for data in permissions:
+#         print(data)
+
+#     test_role.permissions = permissions
+
+#     saved_role = test_role.update(permissions=permissions)
+
+#     user.roles = saved_role
+
+#     saved_user = user.save()
+
+#     print(saved_user.id)
 
 
 def tests_teardown():

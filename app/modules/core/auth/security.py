@@ -13,6 +13,7 @@ from .settings import AuthSettings
 logger = LoggingService(True)
 
 
+# TODO: [AUTH] Refactor into a class
 # TODO: [TEST] auth/security coverage = 60%
 def hash_password(password: str) -> str:
     """Returns hashed user password using bcrypt"""

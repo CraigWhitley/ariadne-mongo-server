@@ -19,6 +19,7 @@ def resolve_find_user_by_email(_, info, email: str) -> User:
 
     return user
 
+
 @authenticate("user:me")
 def resolve_me(_, info) -> User:
     user = _repo.me(info)

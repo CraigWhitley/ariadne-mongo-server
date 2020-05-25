@@ -25,3 +25,7 @@ class UserRepository:
             return user
 
         raise ValueError("User not found.")
+
+    def get_users_permissions(self, email):
+        if self._validation_service.validate_email(email):
+            return User.objects(email=email).only('permissions')

@@ -2,5 +2,25 @@
     "get_all_roles": {
         "route": "role:get_all_roles",
         "description": "Allow a user to retrieve a list of all roles."
+    },
+    "add_permission_to_role": {
+        "route": "role:add_permission_to_role",
+        "description": "Allow a user to add a permission to a role."
+    },
+    "add_role_to_user": {
+        "route": "role:add_role_to_user",
+        "description": "Allow a user to add a role to a user."
+    },
+    "get_all_permissions": {
+        "route": "role:get_all_permissions",
+        "description": "Allows a user to obtain a list of all permissions."
+    },
+    "create_new_role":{
+        "route": "role:create_new_role",
+        "description": "Allows a user to create a new role."
+    },
+    "create_new_permission": {
+        "route": "role:create_new_permission",
+        "description": "Allow a user to create a new permission."
     }
 }
