@@ -8,6 +8,7 @@ import datetime as dt
 class AuthRepository:
 
     # TODO: [REPO] Inject this service?
+    # Are we ever using another implementation? YAGNI.
     _validation_service = ValidationService()
 
     # TODO: [TEST] auth/repository test coverage. Currently 83%

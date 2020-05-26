@@ -32,8 +32,7 @@ db_service.connect(connection_input)
 type_defs = load_schema_from_path("graphql_server/schema/")
 schema = make_executable_schema(type_defs, query, mutation, user)
 
-# FIXME: [APP] Fix the arguments for the permissions loader.
-permissions = load_all_permissions("/app/app.py", "json")
+permissions = load_all_permissions("json")
 
 seed_all(permissions)
 

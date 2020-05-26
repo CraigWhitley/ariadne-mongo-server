@@ -9,6 +9,12 @@ type User {
   roles: [Role!]!
 }
 
+type UsersPermissions {
+    whitelist: [Permission]
+    blacklist: [Permission]
+    permissions: [Permission]
+}
+
 input UserRoleInput {
     userId: String!
     roleId: String!
@@ -18,7 +24,7 @@ extend type Query {
     allUsers(skip: Int!, take: Int!): [User!]!
     findUserByEmail(email: String!):User
     me: User
-    getUsersPermissions(email: String):[Permission]
+    getUsersPermissions(email: String):UsersPermissions
 }
 
 extend type Mutation {

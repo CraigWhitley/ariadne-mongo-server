@@ -28,6 +28,24 @@ class UserRepository:
 
     def get_users_permissions(self, email: str) -> []:
         if self._validation_service.validate_email(email):
-            permissions = User.objects(email=email).only('role.permissions')
-            print(permissions)
+            """Returns a list of all a users permissions """
+            user = User.objects(email=email).first()
+
+            permissions = {}
+            permissions["blacklist"] = []
+            permissions["whitelist"] = []
+            permissions["permissions"] = []
+
+            if hasattr(user, 'blacklist'):
+                for black in user.blacklist:
+                    permissions["blacklist"].append(black)
+
+            if hasattr(user, 'whitelist'):
+                for white in user.whitelist:
+                    permissions["whitelist"].append(white)
+
+            for role in user.roles:
+                for perm in role.permissions:
+                    permissions["permissions"].append(perm)
+
             return permissions

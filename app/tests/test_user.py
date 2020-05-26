@@ -10,7 +10,7 @@ from modules.core.user.repository import UserRepository
 from modules.core.role.repository import RoleRepository
 from .mock_models import mock_context
 from .setup import register_test_db, register_test_injections, \
-                   teardown
+                   teardown, load_permissions
 
 faker = Faker()
 _user_repo = UserRepository()
@@ -109,27 +109,39 @@ def test_resolve_me():
     assert user.email == resolved_user.email
 
 
-# def test_can_get_all_users_permissions():
-#     load_permissions()
+def test_can_get_all_users_permissions():
+    load_permissions()
 
-#     user = generate_user()
+    user = generate_user()
 
-#     test_role = _role_repo.create_new_role("Test")
+    saved_user = user.save()
 
-#     permissions = _role_repo.get_all_permission()
+    test_role = _role_repo.create_new_role("Test")
 
-#     for data in permissions:
-#         print(data)
+    permissions = _role_repo.get_all_permission()
 
-#     test_role.permissions = permissions
+    test_role.permissions = permissions
 
-#     saved_role = test_role.update(permissions=permissions)
+    test_role.update(permissions=permissions)
 
-#     user.roles = saved_role
+    saved_user.roles.append(test_role)
 
-#     saved_user = user.save()
+    saved_user.save()
 
-#     print(saved_user.id)
+    # new_user = _user_repo.find_user_by_email(saved_user.email)
+
+    # print(new_user.email)
+
+    # for role in new_user.roles:
+    #     print(role.name)
+    #     for perm in role.permissions:
+    #         print(perm.route)
+
+    users_permissions = _user_repo.get_users_permissions(saved_user.email)
+
+    # print(users_permissions["permissions"])
+
+    assert len(users_permissions["permissions"]) > 0
 
 
 def tests_teardown():

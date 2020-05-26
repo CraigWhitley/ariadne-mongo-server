@@ -1,6 +1,7 @@
-from pathlib import Path
+from pathlib import Path, WindowsPath
 from os import walk
 import json
+from platform import system
 
 
 class FileLoader:
@@ -26,14 +27,18 @@ class FolderSearcher:
 
 
 # TODO: [TEST] load_all_permissions()
-def load_all_permissions(path, file_type):
-    module_path = Path(path).parent / "modules/"
+def load_all_permissions(file_type):
+    modules_path = None
+
+    if system() == "Windows":
+        modules_path = Path('app', 'modules')
+    elif system() == "Linux":
+        modules_path = Path('/app', 'modules')
 
     permissions = {}
 
-    # FIXME: Permissions loader doesn't work on Windows systems
     # TODO: [REFACTOR] Break up into generic FileLoader and FolderSearch
-    for root, dirs, files in walk(module_path, topdown=True):
+    for root, dirs, files in walk(modules_path, topdown=True):
 
         if file_type == "json":
 
