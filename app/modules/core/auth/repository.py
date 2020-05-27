@@ -2,7 +2,9 @@ from modules.core.user.validation_service import ValidationService
 from modules.core.auth.models import JwtPayload
 from modules.core.user.models import User
 from .service import AuthService
+from .models import BlacklistedToken
 import datetime as dt
+from uuid import uuid4
 
 
 class AuthRepository:
@@ -10,7 +12,7 @@ class AuthRepository:
     _validation_service = ValidationService()
     _auth_service = AuthService()
 
-    # TODO: [TEST] auth/repository test coverage. Currently 83%
+    # TODO: [TEST] auth/repository test coverage.
     def register_user(self, data: dict):
         """
         Allows a user to register a new account.
@@ -80,8 +82,9 @@ class AuthRepository:
         """
         Clear a users JWT token on logout.
         """
-        # FIXME: [AUTH] blacklist used tokens her
         token = self._auth_service.get_token_from_request_header(context)
+
+        BlacklistedToken(id=str(uuid4()), token=token).save()
 
         user = self._auth_service.get_user_from_token(token)
 

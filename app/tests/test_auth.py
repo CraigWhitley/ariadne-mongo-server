@@ -116,6 +116,7 @@ def test_can_retrieve_jwt_string_from_email():
     assert isinstance(jwt_result, str)
 
 
+# FIXME: [TEST] Test logout and blacklisted tokens.
 def tests_teardown():
     drop_all_collections()
     teardown()

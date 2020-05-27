@@ -8,7 +8,7 @@ _repo = UserRepository()
 
 @authenticate("user:get_all_users")
 def resolve_get_all_users(_, info, skip=0, take=25) -> list:
-    users = _repo.fetch_all_users(skip, take)
+    users = _repo.get_all_users(skip, take)
 
     return users
 

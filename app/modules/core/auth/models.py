@@ -1,6 +1,8 @@
 import datetime as dt
 from .settings import AuthSettings
-
+from mongoengine import Document
+from mongoengine.fields import DateTimeField, StringField
+from uuid import uuid4
 
 class JwtPayload:
     """
@@ -25,3 +27,11 @@ class JwtPayload:
                    "iss": self.iss}
 
         return payload
+
+
+class BlacklistedToken(Document):
+    """Schema to represent a blacklisted token"""
+    id = StringField(primary_key=True, default=str(uuid4()))
+    token = StringField(max_length=400)
+    created_at = DateTimeField(default=dt.datetime.now())
+    meta = {"collection": "blacklisted_tokens"}

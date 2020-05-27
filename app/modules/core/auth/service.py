@@ -5,6 +5,7 @@ from .enums import JwtStatus
 from modules.core.logging.logging_service import LoggingService
 from modules.core.logging.models import LogEntry, LogLevel
 from modules.core.user.models import User
+from .models import BlacklistedToken
 import functools
 from graphql import GraphQLResolveInfo
 from modules.core.role.errors import UnauthorizedError
@@ -63,21 +64,24 @@ class AuthService:
                         LogLevel.INFO,
                         __name__,
                         "JWT Token expired for user."))
-            return JwtStatus.EXPIRED
+            raise jwt.ExpiredSignatureError("Expired token.")
+            # return JwtStatus.EXPIRED
 
         except jwt.InvalidIssuerError:
             self._logger.log(LogEntry(
                         LogLevel.ERROR,
                         __name__,
                         "Attempted to decode token with invalid issuer."))
-            return JwtStatus.INVALID_ISSUER
+            raise jwt.InvalidIssuerError("Invalid JWT Issuer.")
+            # return JwtStatus.INVALID_ISSUER
 
         except jwt.InvalidTokenError:
             self._logger.log(LogEntry(
                     LogLevel.ERROR,
                     __name__,
                     "JWT decoding error when trying to decode token."))
-            return JwtStatus.DECODE_ERROR
+            raise jwt.InvalidTokenError("Invalid token.")
+            # return JwtStatus.DECODE_ERROR
 
         return decoded
 
@@ -93,16 +97,26 @@ class AuthService:
         if token[0] != "Bearer":
             raise ValueError("Unauthorized. Please login.")
 
-        # FIXME: [AUTH] Check for blacklisted token here?
+        black_token = BlacklistedToken.objects(token=token[1]).first()
+
+        if black_token is not None:
+            raise ValueError("Unauthorized. Please login.")
 
         return token[1]
 
     def get_user_from_token(self, token: str) -> User:
         """Retrieves the tokens user from the database"""
 
+        if token is None:
+            raise ValueError("Token not found.")
+
         decoded = self.decode_jwt(token)
 
+        # FIXME [AUTH] JwtStatus object is not subscriptable.
+        # https://stackoverflow.com/questions/216972/what-does-it-mean-if-a-python-object-is-subscriptable-or-not
+        # We're not handling the JwtStatus errors
         email = decoded["email"]
+
         user = User.objects(email=email).first()
 
         if user is not None:
@@ -136,6 +150,9 @@ def authenticate(permission):
             for x in args:
                 if isinstance(x, GraphQLResolveInfo):
                     request = x
+
+            if request is None:
+                raise UnauthorizedError(error)
 
             token = _auth.get_token_from_request_header(request.context)
 
