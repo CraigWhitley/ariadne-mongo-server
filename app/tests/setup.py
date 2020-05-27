@@ -8,6 +8,35 @@ from modules.core.permissions.permissions_loader import load_all_permissions
 from uuid import uuid4
 
 
+# class TestSetup:
+
+#     def service_config(self, binder):
+#         binder.bind(ILoggingClient, MongoDbLogger())
+
+#     def register_test_db(self):
+#         connect(alias='default',
+#                 host="mongodb://localhost/maintesoft_test")
+#         User.drop_collection()
+#         Role.drop_collection()
+#         Permission.drop_collection()
+
+#     def load_permissions(self):
+#         permissions = load_all_permissions("json")
+
+#         for data in permissions:
+#             Permission(
+#                 id=str(uuid4()),
+#                 route=permissions[data]["route"],
+#                 description=permissions[data]["description"]
+#             ).save()
+
+#     def register_test_injections(self):
+#         inject.configure(service_config)
+
+#     def teardown(self):
+#         inject.clear()
+
+
 def service_config(binder):
     binder.bind(ILoggingClient, MongoDbLogger())
 

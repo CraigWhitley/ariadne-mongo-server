@@ -1,6 +1,6 @@
 from .models import User
 from modules.core.user.validation_service import ValidationService
-from modules.core.auth.security import AuthService
+from modules.core.auth.service import AuthService
 
 
 class UserRepository:

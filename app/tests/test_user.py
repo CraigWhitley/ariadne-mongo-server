@@ -1,5 +1,5 @@
 from modules.core.user.models import User
-from modules.core.auth.security import AuthService
+from modules.core.auth.service import AuthService
 import pytest
 from uuid import uuid4
 from faker import Faker
@@ -12,6 +12,7 @@ from .setup import register_test_db, register_test_injections, \
                    teardown, load_permissions
 
 faker = Faker()
+
 _user_repo = UserRepository()
 _auth_repo = AuthRepository()
 _role_repo = RoleRepository()
@@ -33,9 +34,7 @@ def generate_user():
                     faker.password(length=10,
                                    digits=True,
                                    upper_case=True,
-                                   lower_case=True)),
-        first_name=faker.first_name(),
-        last_name=faker.last_name())
+                                   lower_case=True))
     return user
 
 
@@ -75,8 +74,6 @@ def test_register_user_returns_correct_users_email():
     user = {}
     user["email"] = "correct@email.com"
     user["password"] = "C0rrectP455@"
-    user["firstName"] = "Jenny"
-    user["lastName"] = "Sandsworth"
 
     _auth_repo.register_user(user)
 

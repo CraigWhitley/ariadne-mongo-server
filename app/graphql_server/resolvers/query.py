@@ -14,8 +14,6 @@ query.set_field("getAllPermissions", resolve_get_all_permissions)
 query.set_field("getUsersPermissions", resolve_get_users_permissions)
 
 user = ObjectType("User")
-user.set_alias("firstName", "first_name")
-user.set_alias("lastName", "last_name")
 user.set_alias("accessToken", "access_token")
 
 role = ObjectType("Role")

@@ -1,7 +1,7 @@
 from modules.core.user.validation_service import ValidationService
 from modules.core.auth.models import JwtPayload
 from modules.core.user.models import User
-from modules.core.auth.security import AuthService
+from .service import AuthService
 import datetime as dt
 
 

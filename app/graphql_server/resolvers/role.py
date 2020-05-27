@@ -1,6 +1,6 @@
 from modules.core.role.repository import RoleRepository
 from modules.core.role.models import Role
-from modules.core.auth.security import authenticate
+from modules.core.auth.service import authenticate
 
 _repo = RoleRepository()
 

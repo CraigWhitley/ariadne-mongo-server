@@ -1,5 +1,5 @@
 from modules.core.user.models import User
-from modules.core.auth.security import AuthService
+from modules.core.auth.service import AuthService
 import re
 from uuid import uuid4
 
@@ -22,23 +22,6 @@ class ValidationService:
         email = user_input["email"]
         password = user_input["password"]
 
-        first_name = None
-        last_name = None
-
-        if user_input["firstName"] is not None:
-            first_name = user_input["firstName"]
-
-            if len(first_name) < 2 or len(first_name) > 50:
-                raise ValueError("First name must be a minimum of 8, maximum "
-                                 "of 50 characters.")
-
-        if user_input["lastName"] is not None:
-            last_name = user_input["lastName"]
-
-            if len(last_name) < 2 or len(last_name) > 50:
-                raise ValueError("Last name must be a minimum of 8, maximum "
-                                 "of 50 characters.")
-
         if self.check_email_exists(email):
             raise ValueError("Email already exists.")
 
@@ -51,9 +34,7 @@ class ValidationService:
         return User(
             id=id,
             email=email,
-            password=self._auth_service.hash_password(password),
-            first_name=first_name,
-            last_name=last_name
+            password=self._auth_service.hash_password(password)
         )
 
     def check_email_exists(self, email: str) -> bool:

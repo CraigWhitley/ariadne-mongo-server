@@ -1,8 +1,6 @@
 type User {
   id: ID!
   email: String!
-  firstName: String!
-  lastName: String!
   accessToken: String
   whitelist: [Permission]
   blacklist: [Permission]

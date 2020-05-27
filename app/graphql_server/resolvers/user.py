@@ -1,5 +1,5 @@
 from modules.core.user.models import User
-from modules.core.auth.security import authenticate
+from modules.core.auth.service import authenticate
 from modules.core.user.repository import UserRepository
 # TODO: [RESOLVERS] Add auth to all requests
 

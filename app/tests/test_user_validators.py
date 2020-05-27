@@ -17,8 +17,6 @@ def user():
     user = {}
     user["email"] = "correct@email.com"
     user["password"] = "C0rrectP455@"
-    user["firstName"] = "Jenny"
-    user["lastName"] = "Sandsworth"
 
     return user
 

@@ -1,6 +1,6 @@
 from modules.core.user.models import User
 from modules.core.role.models import Role, Permission
-from modules.core.auth.security import hash_password
+from modules.core.auth.service import AuthService
 from uuid import uuid4
 from faker import Faker
 import random
@@ -8,6 +8,8 @@ import random
 fake = Faker()
 roles = []
 permissions = {}
+
+_auth_service = AuthService()
 
 
 def seed_all(all_permissions: dict) -> None:
@@ -57,9 +59,7 @@ def seed_some_users(amount=50) -> None:
     User(
         id=str(uuid4()),
         email="kiada@test.com",
-        password=hash_password("FunkyP455"),
-        first_name="Craig",
-        last_name="Whitley",
+        password=_auth_service.hash_password("FunkyP455"),
         blacklist=[permissions["find_user_by_email"]],
         roles=[roles[0]]
     ).save()
@@ -69,11 +69,10 @@ def seed_some_users(amount=50) -> None:
         User(
             id=str(uuid4()),
             email=fake.ascii_company_email(),
-            password=hash_password(fake.password(length=10,
+            password=_auth_service.hash_password(fake.password(length=10,
                                                  digits=True,
                                                  upper_case=True,
                                                  lower_case=True)),
-            first_name=fake.first_name(),
-            last_name=fake.last_name(),
+
             roles=[role]
         ).save()

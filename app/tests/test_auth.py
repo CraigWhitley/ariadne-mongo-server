@@ -1,6 +1,6 @@
 from modules.core.user.models import User
 from modules.core.auth.models import JwtPayload
-from modules.core.auth.security import AuthService
+from modules.core.auth.service import AuthService
 from modules.core.auth.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
@@ -35,9 +35,7 @@ def test_can_authenticate_password():
     User(
         id=str(uuid4()),
         email="hashpass@test.com",
-        password=_service.hash_password("S0meFunkyP455"),
-        first_name="Craig",
-        last_name="Johnson",
+        password=_service.hash_password("S0meFunkyP455")
     ).save()
     result = User.objects(email="hashpass@test.com").first()
 
@@ -92,9 +90,7 @@ def test_can_login_user():
     user = User(
         id=str(uuid4()),
         email="login@test.com",
-        password=_service.hash_password("S0meFunkyP455"),
-        first_name="James",
-        last_name="Jamieson",
+        password=_service.hash_password("S0meFunkyP455")
     ).save()
 
     login_input = {}
