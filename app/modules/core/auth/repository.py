@@ -80,7 +80,7 @@ class AuthRepository:
         """
         Clear a users JWT token on logout.
         """
-        # TODO: [AUTH] blacklist used tokens
+        # FIXME: [AUTH] blacklist used tokens her
         token = self._auth_service.get_token_from_request_header(context)
 
         user = self._auth_service.get_user_from_token(token)

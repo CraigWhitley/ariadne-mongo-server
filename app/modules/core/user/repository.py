@@ -8,7 +8,7 @@ class UserRepository:
     _validation_service = ValidationService()
     _auth_service = AuthService()
 
-    def fetch_all_users(self, skip=0, take=25):
+    def get_all_users(self, skip=0, take=25):
         return User.objects[skip:take+skip]
 
     def find_user_by_email(self, email: str):

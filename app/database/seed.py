@@ -9,6 +9,8 @@ import random
 fake = Faker()
 roles = []
 permissions = {}
+permissions_list = []
+super_user: Role = None
 
 _auth_service = AuthService()
 
@@ -47,6 +49,22 @@ def seed_roles_and_permissions(all_permissions: dict, amount=5):
         ).save()
     )
 
+    for data in all_permissions:
+        permissions_list.append(
+            Permission(
+                id=str(uuid4()),
+                route=all_permissions[data]["route"],
+                description=all_permissions[data]["description"]
+            ).save()
+        )
+
+    super_user = Role(
+            id=str(uuid4()),
+            name="SuperUser"
+         ).save()
+
+    super_user.update(permissions=permissions_list)
+
     roles.append(
         Role(
             id=str(uuid4()),
@@ -57,13 +75,18 @@ def seed_roles_and_permissions(all_permissions: dict, amount=5):
 
 
 def seed_some_users(amount=50) -> None:
-    User(
+    me = User(
         id=str(uuid4()),
         email="kiada@test.com",
         password=_auth_service.hash_password("FunkyP455"),
-        blacklist=[permissions["find_user_by_email"]],
-        roles=[roles[0]]
+        blacklist=[permissions["find_user_by_email"]]
     ).save()
+
+    super_user = Role.objects(name="SuperUser").first()
+
+    me.roles.append(super_user)
+
+    me.save()
 
     for _ in range(amount):
         role = roles[random.randint(0, len(roles) - 1)]

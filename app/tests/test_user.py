@@ -9,7 +9,7 @@ from modules.core.user.repository import UserRepository
 from modules.core.role.repository import RoleRepository
 from .mock_models import mock_context
 from .setup import register_test_db, register_test_injections, \
-                   teardown, load_permissions
+                   teardown, load_permissions, drop_all_collections
 
 faker = Faker()
 
@@ -64,7 +64,8 @@ def test_can_retrieve_list_of_users():
     """Tests whether a list of all users can be queried"""
     user = generate_user()
     user.save()
-    users = _user_repo.fetch_all_users()
+
+    users = _user_repo.get_all_users()
 
     assert users.first() is not None
 
@@ -118,9 +119,7 @@ def test_can_get_all_users_permissions():
 
     test_role = _role_repo.create_new_role("Test")
 
-    permissions = _role_repo.get_all_permission()
-
-    test_role.permissions = permissions
+    permissions = _role_repo.get_all_permissions()
 
     test_role.update(permissions=permissions)
 
@@ -134,4 +133,5 @@ def test_can_get_all_users_permissions():
 
 
 def tests_teardown():
+    drop_all_collections()
     teardown()

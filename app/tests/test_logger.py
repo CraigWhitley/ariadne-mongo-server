@@ -1,7 +1,8 @@
 from modules.core.logging.logging_service import LoggingService
 from modules.core.logging.models import LogLevel, LogEntry
 import pytest
-from .setup import register_test_db, register_test_injections, teardown
+from .setup import register_test_db, register_test_injections, teardown,\
+                    drop_all_collections
 
 
 @pytest.fixture(autouse=True)
@@ -28,4 +29,5 @@ def test_mongo_logging_client_persists_log():
 
 
 def tests_teardown():
+    drop_all_collections()
     teardown()

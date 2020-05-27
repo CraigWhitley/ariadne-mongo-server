@@ -1,7 +1,8 @@
 from modules.core.user.models import User
 from modules.core.user.validation_service import ValidationService
 import pytest
-from .setup import register_test_db, register_test_injections, teardown
+from .setup import register_test_db, register_test_injections, teardown,\
+                    drop_all_collections
 
 _service = ValidationService()
 
@@ -78,4 +79,5 @@ def test_user_email_already_exists_validation(user):
 
 
 def tests_teardown():
+    drop_all_collections()
     teardown()

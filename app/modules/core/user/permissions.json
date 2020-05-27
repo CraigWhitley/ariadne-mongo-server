@@ -10,7 +10,7 @@
     },
 
     "all_users": {
-        "route": "user:all_users",
+        "route": "user:get_all_users",
         "description": "Allow user to retrieve a list of all users."
     },
 

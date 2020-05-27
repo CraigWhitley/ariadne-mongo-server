@@ -93,6 +93,8 @@ class AuthService:
         if token[0] != "Bearer":
             raise ValueError("Unauthorized. Please login.")
 
+        # FIXME: [AUTH] Check for blacklisted token here?
+
         return token[1]
 
     def get_user_from_token(self, token: str) -> User:

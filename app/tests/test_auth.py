@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 from uuid import uuid4
 from modules.core.auth.repository import AuthRepository
 from modules.core.auth.settings import AuthSettings
-from .setup import register_test_db, register_test_injections, teardown
+from .setup import register_test_db, register_test_injections, teardown, \
+                    drop_all_collections
+
 
 _repo = AuthRepository()
 _service = AuthService()
@@ -115,4 +117,5 @@ def test_can_retrieve_jwt_string_from_email():
 
 
 def tests_teardown():
+    drop_all_collections()
     teardown()

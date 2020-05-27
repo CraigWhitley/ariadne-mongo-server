@@ -14,7 +14,7 @@ def resolve_get_all_roles(_, info):
 
 @authenticate("role:get_all_permissions")
 def resolve_get_all_permissions(_, info):
-    permissions = _repo.get_all_permission()
+    permissions = _repo.get_all_permissions()
 
     return permissions
 

@@ -19,7 +19,7 @@ input UserRoleInput {
 }
 
 extend type Query {
-    allUsers(skip: Int!, take: Int!): [User!]!
+    getAllUsers(skip: Int!, take: Int!): [User!]!
     findUserByEmail(email: String!):User
     me: User
     getUsersPermissions(email: String):UsersPermissions

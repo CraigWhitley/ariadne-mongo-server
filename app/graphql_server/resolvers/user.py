@@ -6,8 +6,8 @@ from modules.core.user.repository import UserRepository
 _repo = UserRepository()
 
 
-@authenticate("user:all_users")
-def resolve_all_users(_, info, skip=0, take=25) -> list:
+@authenticate("user:get_all_users")
+def resolve_get_all_users(_, info, skip=0, take=25) -> list:
     users = _repo.fetch_all_users(skip, take)
 
     return users

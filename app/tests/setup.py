@@ -66,5 +66,11 @@ def register_test_injections():
     inject.configure(service_config)
 
 
+def drop_all_collections():
+    User.drop_collection()
+    Role.drop_collection()
+    Permission.drop_collection()
+
+
 def teardown():
     inject.clear()

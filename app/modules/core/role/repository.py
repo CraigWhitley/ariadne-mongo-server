@@ -9,7 +9,7 @@ class RoleRepository:
     def get_all_roles(self) -> [Role]:
         return Role.objects.all()
 
-    def get_all_permission(self) -> [Permission]:
+    def get_all_permissions(self) -> [Permission]:
         return Permission.objects.all()
 
     def add_permission_to_role(self, data: dict) -> Role:
