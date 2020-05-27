@@ -1,10 +1,12 @@
 from modules.core.user.models import User
-from modules.core.auth.security import hash_password
+from modules.core.auth.security import AuthService
 import re
 from uuid import uuid4
 
 
 class ValidationService:
+
+    _auth_service = AuthService()
 
     _email_regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
 
@@ -49,7 +51,7 @@ class ValidationService:
         return User(
             id=id,
             email=email,
-            password=hash_password(password),
+            password=self._auth_service.hash_password(password),
             first_name=first_name,
             last_name=last_name
         )

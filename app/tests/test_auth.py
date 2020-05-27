@@ -1,7 +1,6 @@
 from modules.core.user.models import User
 from modules.core.auth.models import JwtPayload
-from modules.core.auth.security import hash_password, check_password,\
-                                       encode_jwt, decode_jwt
+from modules.core.auth.security import AuthService
 from modules.core.auth.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
@@ -11,6 +10,7 @@ from modules.core.auth.settings import AuthSettings
 from .setup import register_test_db, register_test_injections, teardown
 
 _repo = AuthRepository()
+_service = AuthService()
 
 
 @pytest.fixture(autouse=True)
@@ -24,7 +24,7 @@ def setup():
 def encoded_jwt():
     payload = JwtPayload('test@test.com')
 
-    encoded = encode_jwt(payload.get())
+    encoded = _service.encode_jwt(payload.get())
 
     return encoded
 
@@ -35,13 +35,13 @@ def test_can_authenticate_password():
     User(
         id=str(uuid4()),
         email="hashpass@test.com",
-        password=hash_password("S0meFunkyP455"),
+        password=_service.hash_password("S0meFunkyP455"),
         first_name="Craig",
         last_name="Johnson",
     ).save()
     result = User.objects(email="hashpass@test.com").first()
 
-    assert check_password("S0meFunkyP455", result.password)
+    assert _service.check_password("S0meFunkyP455", result.password)
 
 
 def test_can_encode_jwt(encoded_jwt):
@@ -52,7 +52,7 @@ def test_can_encode_jwt(encoded_jwt):
 
 def test_can_decode_jwt(encoded_jwt):
     """Tests if JWT can be decoded"""
-    decoded = decode_jwt(encoded_jwt)
+    decoded = _service.decode_jwt(encoded_jwt)
 
     assert decoded["email"] == "test@test.com"
 
@@ -61,7 +61,7 @@ def test_invalid_jwt_returns_false():
     """Tests invalid JWT returns false"""
     encoded = None
 
-    decoded = decode_jwt(encoded)
+    decoded = _service.decode_jwt(encoded)
 
     assert decoded is JwtStatus.DECODE_ERROR
 
@@ -70,9 +70,9 @@ def test_invalid_jwt_iss_returns_false():
     """Tests that JWT decoding require valid issuer"""
     payload = JwtPayload("tes@test.com", AuthSettings.JWT_EXPIRY,
                          False, 'test')
-    encoded_jwt = encode_jwt(payload.get())
+    encoded_jwt = _service.encode_jwt(payload.get())
 
-    decoded = decode_jwt(encoded_jwt)
+    decoded = _service.decode_jwt(encoded_jwt)
 
     assert decoded is JwtStatus.INVALID_ISSUER
 
@@ -80,9 +80,9 @@ def test_invalid_jwt_iss_returns_false():
 def test_expired_token_returns_false():
     """Tests expired token returns expired status"""
     payload = JwtPayload("test@test.com", -1)
-    encoded_jwt = encode_jwt(payload.get())
+    encoded_jwt = _service.encode_jwt(payload.get())
 
-    decoded = decode_jwt(encoded_jwt)
+    decoded = _service.decode_jwt(encoded_jwt)
 
     assert decoded is JwtStatus.EXPIRED
 
@@ -92,7 +92,7 @@ def test_can_login_user():
     user = User(
         id=str(uuid4()),
         email="login@test.com",
-        password=hash_password("S0meFunkyP455"),
+        password=_service.hash_password("S0meFunkyP455"),
         first_name="James",
         last_name="Jamieson",
     ).save()

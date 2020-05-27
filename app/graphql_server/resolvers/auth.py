@@ -24,3 +24,13 @@ def resolve_login_user(_, info, data: dict) -> User:
     user = _repo.login_user(data)
 
     return user
+
+
+def resolve_logout(_, info, token: str) -> bool:
+    """
+    Resolver for logging out a user that clears the
+    users access_token field in the db
+    """
+    result = _repo.logout(token)
+
+    return result

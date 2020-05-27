@@ -1,12 +1,12 @@
 from .models import User
 from modules.core.user.validation_service import ValidationService
-from modules.core.auth.security import get_token_from_request_header, \
-                                       get_user_from_token
+from modules.core.auth.security import AuthService
 
 
 class UserRepository:
 
     _validation_service = ValidationService()
+    _auth_service = AuthService()
 
     def fetch_all_users(self, skip=0, take=25):
         return User.objects[skip:take+skip]
@@ -18,10 +18,10 @@ class UserRepository:
             raise ValueError("Invalid email provided.")
 
     def me(self, info):
-        token = get_token_from_request_header(info.context)
+        token = self._auth_service.get_token_from_request_header(info.context)
 
         if token is not None:
-            user = get_user_from_token(token)
+            user = self._auth_service.get_user_from_token(token)
             return user
 
         raise ValueError("User not found.")

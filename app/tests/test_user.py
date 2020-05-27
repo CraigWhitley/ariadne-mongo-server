@@ -1,6 +1,5 @@
 from modules.core.user.models import User
-from modules.core.auth.security import hash_password, \
-                                        encode_jwt
+from modules.core.auth.security import AuthService
 import pytest
 from uuid import uuid4
 from faker import Faker
@@ -17,6 +16,8 @@ _user_repo = UserRepository()
 _auth_repo = AuthRepository()
 _role_repo = RoleRepository()
 
+_auth_service = AuthService()
+
 
 @pytest.fixture(autouse=True)
 def setup():
@@ -28,7 +29,7 @@ def generate_user():
     user = User(
         id=str(uuid4()),
         email=faker.ascii_company_email(),
-        password=hash_password(
+        password=_auth_service.hash_password(
                     faker.password(length=10,
                                    digits=True,
                                    upper_case=True,
@@ -93,7 +94,7 @@ def test_resolve_me():
 
     jwt_payload = JwtPayload(user.email)
 
-    token = encode_jwt(jwt_payload.get())
+    token = _auth_service.encode_jwt(jwt_payload.get())
 
     user.access_token = str(token, 'utf8')
     user.save()
@@ -110,6 +111,8 @@ def test_resolve_me():
 
 
 def test_can_get_all_users_permissions():
+    """Tests we can get all of a users permissions"""
+
     load_permissions()
 
     user = generate_user()
@@ -128,18 +131,7 @@ def test_can_get_all_users_permissions():
 
     saved_user.save()
 
-    # new_user = _user_repo.find_user_by_email(saved_user.email)
-
-    # print(new_user.email)
-
-    # for role in new_user.roles:
-    #     print(role.name)
-    #     for perm in role.permissions:
-    #         print(perm.route)
-
     users_permissions = _user_repo.get_users_permissions(saved_user.email)
-
-    # print(users_permissions["permissions"])
 
     assert len(users_permissions["permissions"]) > 0
 

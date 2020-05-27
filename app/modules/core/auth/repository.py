@@ -1,15 +1,14 @@
 from modules.core.user.validation_service import ValidationService
 from modules.core.auth.models import JwtPayload
 from modules.core.user.models import User
-from modules.core.auth.security import encode_jwt, check_password
+from modules.core.auth.security import AuthService
 import datetime as dt
 
 
 class AuthRepository:
 
-    # TODO: [REPO] Inject this service?
-    # Are we ever using another implementation? YAGNI.
     _validation_service = ValidationService()
+    _auth_service = AuthService()
 
     # TODO: [TEST] auth/repository test coverage. Currently 83%
     def register_user(self, data: dict):
@@ -51,7 +50,7 @@ class AuthRepository:
 
         if user is not None:
             if self._validation_service.validate_password(password):
-                if check_password(password, user.password):
+                if self._auth_service.check_password(password, user.password):
                     token = self._get_token(email)
 
                     user.access_token = token
@@ -71,8 +70,25 @@ class AuthRepository:
         Gets encoded JWT token as a UTF8 string from email input.
         """
         payload = JwtPayload(email)
-        encoded_jwt = encode_jwt(payload.get())
+        encoded_jwt = self._auth_service.encode_jwt(payload.get())
 
         token = str(encoded_jwt, encoding="utf8")
 
         return token
+
+    def logout(self, token: str) -> bool:
+        """
+        Clear a users JWT token on logout.
+        """
+        # FIXME: [AUTH] Get the users token from authorization header
+        # TODO: [AUTH] blacklist used tokens
+        user = self._auth_service.get_user_from_token(token)
+
+        user.access_token = ""
+
+        saved_user = user.save()
+
+        if saved_user.access_token == "":
+            return True
+        else:
+            return False

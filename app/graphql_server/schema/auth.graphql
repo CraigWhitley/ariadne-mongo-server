@@ -13,4 +13,5 @@ input LoginInput {
 extend type Mutation {
     registerUser(data: RegisterUserInput!):User!
     loginUser(data: LoginInput!): User!
+    logout(token: String!): Boolean
 }
