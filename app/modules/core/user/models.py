@@ -2,7 +2,8 @@ from mongoengine import Document, EmailField, StringField, DateTimeField, \
                          BooleanField, ListField, ReferenceField, PULL
 import datetime as dt
 from uuid import uuid4
-from modules.core.role.models import Role, Permission
+from modules.core.role.models import Role
+from modules.core.permission.models import Permission
 
 
 class User(Document):
@@ -10,8 +11,6 @@ class User(Document):
     id = StringField(primary_key=True, default=str(uuid4()))
     email = EmailField(required=True, unique=True)
     password = StringField(max_length=128, min_length=8, required=True)
-    # first_name = StringField(max_length=50, min_length=2)
-    # last_name = StringField(max_length=50, min_length=2)
     is_active = BooleanField(default=True)
     whitelist = ListField(ReferenceField(Permission, reverse_delete_rule=PULL))
     blacklist = ListField(ReferenceField(Permission, reverse_delete_rule=PULL))

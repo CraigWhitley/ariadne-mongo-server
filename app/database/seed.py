@@ -1,5 +1,6 @@
 from modules.core.user.models import User
-from modules.core.role.models import Role, Permission
+from modules.core.role.models import Role
+from modules.core.permission.models import Permission
 from modules.core.auth.service import AuthService
 from uuid import uuid4
 from faker import Faker

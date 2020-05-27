@@ -79,10 +79,7 @@ class AuthService:
                     "JWT decoding error when trying to decode token."))
             return JwtStatus.DECODE_ERROR
 
-        finally:
-            return decoded
-
-        return None
+        return decoded
 
     def get_token_from_request_header(self, context: dict) -> str:
         """Parses the Bearer token from the authorization request header"""

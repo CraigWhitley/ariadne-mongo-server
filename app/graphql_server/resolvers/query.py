@@ -1,7 +1,11 @@
 from ariadne import QueryType, ObjectType
-from .user import resolve_all_users, resolve_find_user_by_email, \
-                   resolve_me, resolve_get_users_permissions
-from .role import resolve_get_all_roles, resolve_get_all_permissions
+from .user import resolve_all_users, \
+                   resolve_find_user_by_email, \
+                   resolve_me, \
+                   resolve_get_users_permissions
+from .role import resolve_get_all_roles, \
+                   resolve_get_all_permissions
+from .auth import resolve_logout
 
 query = QueryType()
 
@@ -12,6 +16,7 @@ query.set_field("me", resolve_me)
 query.set_field("getAllRoles", resolve_get_all_roles)
 query.set_field("getAllPermissions", resolve_get_all_permissions)
 query.set_field("getUsersPermissions", resolve_get_users_permissions)
+query.set_field("logout", resolve_logout)
 
 user = ObjectType("User")
 user.set_alias("accessToken", "access_token")

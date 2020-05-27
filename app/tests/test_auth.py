@@ -97,7 +97,7 @@ def test_can_login_user():
     login_input["email"] = user.email
     login_input["password"] = "S0meFunkyP455"
 
-    logged_in_user = _repo.login_user(login_input)
+    logged_in_user = _repo.login(login_input)
 
     assert logged_in_user.access_token is not None
 

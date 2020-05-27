@@ -3,8 +3,9 @@ from modules.core.logging.logger_interface import ILoggingClient
 from modules.core.logging.mongo_client import MongoDbLogger
 import inject
 from modules.core.user.models import User
-from modules.core.role.models import Role, Permission
-from modules.core.permissions.permissions_loader import load_all_permissions
+from modules.core.role.models import Role
+from modules.core.permission.models import Permission
+from modules.core.permission.permissions_loader import load_all_permissions
 from uuid import uuid4
 
 

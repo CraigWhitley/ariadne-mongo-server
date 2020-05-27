@@ -34,7 +34,7 @@ def generate_user():
                     faker.password(length=10,
                                    digits=True,
                                    upper_case=True,
-                                   lower_case=True))
+                                   lower_case=True)))
     return user
 
 

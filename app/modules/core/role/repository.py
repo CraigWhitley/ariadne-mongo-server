@@ -1,4 +1,5 @@
-from .models import Role, Permission
+from .models import Role
+from modules.core.permission.models import Permission
 from modules.core.user.models import User
 from uuid import uuid4
 

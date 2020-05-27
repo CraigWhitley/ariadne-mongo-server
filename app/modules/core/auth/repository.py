@@ -25,7 +25,7 @@ class AuthRepository:
 
         return user
 
-    def login_user(self, data: dict):
+    def login(self, data: dict):
         """
         Allows a user to login with email and password.
         """
@@ -76,12 +76,13 @@ class AuthRepository:
 
         return token
 
-    def logout(self, token: str) -> bool:
+    def logout(self, context: dict) -> bool:
         """
         Clear a users JWT token on logout.
         """
-        # FIXME: [AUTH] Get the users token from authorization header
         # TODO: [AUTH] blacklist used tokens
+        token = self._auth_service.get_token_from_request_header(context)
+
         user = self._auth_service.get_user_from_token(token)
 
         user.access_token = ""
@@ -92,3 +93,6 @@ class AuthRepository:
             return True
         else:
             return False
+
+    def get_auth_service(self):
+        return self._auth_service

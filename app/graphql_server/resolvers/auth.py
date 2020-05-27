@@ -17,20 +17,20 @@ def resolve_register_user(_, info, data: dict) -> User:
     return user
 
 
-def resolve_login_user(_, info, data: dict) -> User:
+def resolve_login(_, info, data: dict) -> User:
     """
     Resolver for logging in a user
     """
-    user = _repo.login_user(data)
+    user = _repo.login(data)
 
     return user
 
 
-def resolve_logout(_, info, token: str) -> bool:
+def resolve_logout(_, info) -> bool:
     """
     Resolver for logging out a user that clears the
     users access_token field in the db
     """
-    result = _repo.logout(token)
+    result = _repo.logout(info.context)
 
     return result
