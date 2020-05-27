@@ -9,6 +9,7 @@ from modules.core.auth.repository import AuthRepository
 from modules.core.auth.settings import AuthSettings
 from .setup import register_test_db, register_test_injections, teardown, \
                     drop_all_collections
+import jwt
 
 
 _repo = AuthRepository()
@@ -61,9 +62,8 @@ def test_invalid_jwt_returns_false():
     """Tests invalid JWT returns false"""
     encoded = None
 
-    decoded = _service.decode_jwt(encoded)
-
-    assert decoded is JwtStatus.DECODE_ERROR
+    with pytest.raises(jwt.InvalidTokenError):
+        _service.decode_jwt(encoded)
 
 
 def test_invalid_jwt_iss_returns_false():
@@ -72,9 +72,8 @@ def test_invalid_jwt_iss_returns_false():
                          False, 'test')
     encoded_jwt = _service.encode_jwt(payload.get())
 
-    decoded = _service.decode_jwt(encoded_jwt)
-
-    assert decoded is JwtStatus.INVALID_ISSUER
+    with pytest.raises(jwt.InvalidIssuerError):
+        _service.decode_jwt(encoded_jwt)
 
 
 def test_expired_token_returns_false():
@@ -82,9 +81,8 @@ def test_expired_token_returns_false():
     payload = JwtPayload("test@test.com", -1)
     encoded_jwt = _service.encode_jwt(payload.get())
 
-    decoded = _service.decode_jwt(encoded_jwt)
-
-    assert decoded is JwtStatus.EXPIRED
+    with pytest.raises(jwt.ExpiredSignatureError):
+        _service.decode_jwt(encoded_jwt)
 
 
 def test_can_login_user():

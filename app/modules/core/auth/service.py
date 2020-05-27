@@ -65,7 +65,6 @@ class AuthService:
                         __name__,
                         "JWT Token expired for user."))
             raise jwt.ExpiredSignatureError("Expired token.")
-            # return JwtStatus.EXPIRED
 
         except jwt.InvalidIssuerError:
             self._logger.log(LogEntry(
@@ -73,7 +72,6 @@ class AuthService:
                         __name__,
                         "Attempted to decode token with invalid issuer."))
             raise jwt.InvalidIssuerError("Invalid JWT Issuer.")
-            # return JwtStatus.INVALID_ISSUER
 
         except jwt.InvalidTokenError:
             self._logger.log(LogEntry(
@@ -81,7 +79,6 @@ class AuthService:
                     __name__,
                     "JWT decoding error when trying to decode token."))
             raise jwt.InvalidTokenError("Invalid token.")
-            # return JwtStatus.DECODE_ERROR
 
         return decoded
 
