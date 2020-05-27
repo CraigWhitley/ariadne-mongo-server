@@ -90,11 +90,10 @@ def test_resolve_me():
     """
     user = generate_user()
 
-    jwt_payload = JwtPayload(user.email)
+    token = _auth_repo.get_token(user.email)
 
-    token = _auth_service.encode_jwt(jwt_payload.get())
+    user.access_token = token
 
-    user.access_token = str(token, 'utf8')
     user.save()
 
     headers = {

@@ -1,19 +1,21 @@
 from modules.core.user.models import User
 from modules.core.auth.models import JwtPayload
 from modules.core.auth.service import AuthService
-from modules.core.auth.enums import JwtStatus
 import pytest
 from dotenv import load_dotenv
 from uuid import uuid4
+from modules.core.user.repository import UserRepository
 from modules.core.auth.repository import AuthRepository
 from modules.core.auth.settings import AuthSettings
 from .setup import register_test_db, register_test_injections, teardown, \
                     drop_all_collections
 import jwt
+from .mock_models import mock_context
 
 
 _repo = AuthRepository()
 _service = AuthService()
+_user_repo = UserRepository()
 
 
 @pytest.fixture(autouse=True)
@@ -109,9 +111,46 @@ def test_can_retrieve_jwt_string_from_email():
     """
 
     email = "test@test.com"
-    jwt_result = _repo._get_token(email)
+    jwt_result = _repo.get_token(email)
 
     assert isinstance(jwt_result, str)
+
+
+def setup_logout_a_user(email: str):
+    email = email
+
+    token = _repo.get_token(email)
+
+    User(
+        id=str(uuid4()),
+        email=email,
+        password=_service.hash_password("S0m3p4ss"),
+        access_token=token).save()
+
+    headers = {
+        "authorization": "Bearer " + token
+        }
+
+    request = mock_context(headers)
+
+    return request
+
+
+def test_can_logout():
+    request = setup_logout_a_user(email="logout@test.com")
+
+    result = _repo.logout(request.context)
+
+    assert result is True
+
+
+def test_unauthorized_on_blacklisted_token():
+    request = setup_logout_a_user(email="black@test.com")
+
+    _repo.logout(request.context)
+
+    with pytest.raises(ValueError):
+        _user_repo.me(request)
 
 
 # FIXME: [TEST] Test logout and blacklisted tokens.

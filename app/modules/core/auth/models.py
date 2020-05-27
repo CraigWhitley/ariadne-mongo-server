@@ -4,6 +4,7 @@ from mongoengine import Document
 from mongoengine.fields import DateTimeField, StringField
 from uuid import uuid4
 
+
 class JwtPayload:
     """
     Constructs the JWT encoding payload.

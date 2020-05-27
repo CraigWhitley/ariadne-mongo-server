@@ -1,7 +1,6 @@
 import bcrypt
 import jwt
 import os
-from .enums import JwtStatus
 from modules.core.logging.logging_service import LoggingService
 from modules.core.logging.models import LogEntry, LogLevel
 from modules.core.user.models import User
@@ -109,9 +108,6 @@ class AuthService:
 
         decoded = self.decode_jwt(token)
 
-        # FIXME [AUTH] JwtStatus object is not subscriptable.
-        # https://stackoverflow.com/questions/216972/what-does-it-mean-if-a-python-object-is-subscriptable-or-not
-        # We're not handling the JwtStatus errors
         email = decoded["email"]
 
         user = User.objects(email=email).first()

@@ -19,7 +19,7 @@ class AuthRepository:
         """
         user = self._validation_service.validate_user_model(data)
 
-        token = self._get_token(user.email)
+        token = self.get_token(user.email)
 
         user.access_token = token
         user.updated_at = dt.datetime.utcnow()
@@ -53,7 +53,7 @@ class AuthRepository:
         if user is not None:
             if self._validation_service.validate_password(password):
                 if self._auth_service.check_password(password, user.password):
-                    token = self._get_token(email)
+                    token = self.get_token(email)
 
                     user.access_token = token
                     user.updated_at = dt.datetime.utcnow()
@@ -67,7 +67,7 @@ class AuthRepository:
         else:
             raise ValueError("Login incorrect")
 
-    def _get_token(self, email: str) -> str:
+    def get_token(self, email: str) -> str:
         """
         Gets encoded JWT token as a UTF8 string from email input.
         """
