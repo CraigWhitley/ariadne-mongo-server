@@ -1,9 +1,7 @@
 from modules.core.user.validation_service import ValidationService
 from modules.core.user.models import User
 from .service import AuthService
-from .models import BlacklistedToken
 import datetime as dt
-from uuid import uuid4
 
 
 class AuthRepository:

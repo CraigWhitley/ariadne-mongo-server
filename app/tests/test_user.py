@@ -6,6 +6,7 @@ from faker import Faker
 from modules.core.auth.repository import AuthRepository
 from modules.core.user.repository import UserRepository
 from modules.core.role.repository import RoleRepository
+from modules.core.permission.repository import PermissionRepository
 from .mock_models import mock_context
 from .setup import register_test_db, register_test_injections, \
                    teardown, load_permissions, drop_all_collections
@@ -15,6 +16,7 @@ faker = Faker()
 _user_repo = UserRepository()
 _auth_repo = AuthRepository()
 _role_repo = RoleRepository()
+_perm_repo = PermissionRepository()
 
 _auth_service = AuthService()
 
@@ -117,7 +119,7 @@ def test_can_get_all_users_permissions():
 
     test_role = _role_repo.create_new_role("Test")
 
-    permissions = _role_repo.get_all_permissions()
+    permissions = _perm_repo.get_all_permissions()
 
     test_role.update(permissions=permissions)
 

@@ -6,6 +6,7 @@ from uuid import uuid4
 from faker import Faker
 from modules.core.role.models import Role
 from modules.core.auth.repository import AuthRepository
+from modules.core.permission.repository import PermissionRepository
 from modules.core.role.repository import RoleRepository
 from .setup import register_test_db, register_test_injections, \
                    teardown, load_permissions, drop_all_collections
@@ -14,6 +15,7 @@ faker = Faker()
 
 _auth_repo = AuthRepository()
 _role_repo = RoleRepository()
+_perm_repo = PermissionRepository()
 
 _auth_service = AuthService()
 
@@ -59,7 +61,7 @@ def test_can_get_a_list_of_all_roles():
 
 
 def test_can_get_a_list_of_all_permissions():
-    permissions = _role_repo.get_all_permissions()
+    permissions = _perm_repo.get_all_permissions()
 
     assert len(permissions) > 0
 
@@ -116,7 +118,7 @@ def test_we_can_add_a_new_role():
 
 
 def test_can_create_new_permission():
-    permission = _role_repo.create_new_permission(
+    permission = _perm_repo.create_new_permission(
                     route="test:test_new_perm",
                     description="Just a test permissions.")
 

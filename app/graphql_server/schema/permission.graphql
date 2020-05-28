@@ -1,0 +1,18 @@
+type Permission {
+    id: ID
+    route: String!
+    description: String
+}
+
+input AddPermissionInput{
+    roleId: String!
+    permissionId: String!
+}
+
+extend type Query {
+    getAllPermissions: [Permission!]!
+}
+
+extend type Mutation {
+    createNewPermission(route: String!, description: String!): Permission!
+}

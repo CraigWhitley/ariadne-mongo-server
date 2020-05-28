@@ -9,9 +9,6 @@ class RoleRepository:
     def get_all_roles(self) -> [Role]:
         return Role.objects.all()
 
-    def get_all_permissions(self) -> [Permission]:
-        return Permission.objects.all()
-
     def add_permission_to_role(self, data: dict) -> Role:
 
         permission_id = data["permissionId"]
@@ -69,13 +66,3 @@ class RoleRepository:
 
         return role
 
-    def create_new_permission(self, route: str,
-                              description: str) -> Permission:
-
-        new_perm = Permission(
-            id=str(uuid4()),
-            route=route,
-            description=description
-        ).save()
-
-        return new_perm

@@ -3,12 +3,11 @@ from .user import resolve_get_all_users, \
                    resolve_find_user_by_email, \
                    resolve_me, \
                    resolve_get_users_permissions
-from .role import resolve_get_all_roles, \
-                   resolve_get_all_permissions
+from .role import resolve_get_all_roles
 from .auth import resolve_logout
+from .permission import resolve_get_all_permissions
 
 query = QueryType()
-
 
 query.set_field("getAllUsers", resolve_get_all_users)
 query.set_field("findUserByEmail", resolve_find_user_by_email)
