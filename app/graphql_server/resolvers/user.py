@@ -1,7 +1,6 @@
 from modules.core.user.models import User
 from modules.core.auth.service import authenticate
 from modules.core.user.repository import UserRepository
-# TODO: [RESOLVERS] Add auth to all requests
 
 _repo = UserRepository()
 
@@ -32,3 +31,10 @@ def resolve_get_users_permissions(_, info, email: str):
     permissions = _repo.get_users_permissions(email)
 
     return permissions
+
+
+@authenticate("user:update_email")
+def resolve_update_email(_, info, data: dict) -> bool:
+    result = _repo.update_email(data)
+
+    return result

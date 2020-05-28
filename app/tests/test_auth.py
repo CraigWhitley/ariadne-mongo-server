@@ -153,7 +153,6 @@ def test_unauthorized_on_blacklisted_token():
         _user_repo.me(request)
 
 
-# FIXME: [TEST] Test logout and blacklisted tokens.
 def tests_teardown():
     drop_all_collections()
     teardown()

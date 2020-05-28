@@ -18,6 +18,12 @@ input UserRoleInput {
     roleId: String!
 }
 
+input UpdateEmailInput {
+    currentEmail: String!
+    newEmail: String!
+    password: String!
+}
+
 extend type Query {
     getAllUsers(skip: Int!, take: Int!): [User!]!
     findUserByEmail(email: String!):User
@@ -27,4 +33,5 @@ extend type Query {
 
 extend type Mutation {
     addRoleToUser(data: UserRoleInput!): User
+    updateEmail(data: UpdateEmailInput!): Boolean!
 }

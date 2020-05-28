@@ -10,6 +10,8 @@ from graphql import GraphQLResolveInfo
 from modules.core.role.errors import UnauthorizedError
 from .settings import AuthSettings
 
+# TODO: [TEST] We only have 57% here.
+
 
 class AuthService:
 
@@ -81,22 +83,46 @@ class AuthService:
 
         return decoded
 
+    def get_client_ip_address(self, context: dict) -> (str, int):
+        request = context["request"]
+
+        client = request.get('client')
+
+        ip_address = client[0]
+        port = client[1]
+
+        print("IP: {} Port: {}".format(ip_address, str(port)))
+
+        return client
+
+    def get_client_user_agent(self, context: dict) -> str:
+        request = context["request"]
+
+        user_agent = request.headers["user-agent"]
+
+        return user_agent
+
     def get_token_from_request_header(self, context: dict) -> str:
         """Parses the Bearer token from the authorization request header"""
 
+        # TODO: [AUTH] Log the attempts from context?
+        # We now have get_client_ip_address() and
+        # get_client_user_agent()
+
+        error = "Unauthorized. Please login."
+
         if "authorization" not in context["request"].headers:
-            # TODO: [AUTH] Log the attempts from context?
-            raise ValueError("Unauthorized. Please login.")
+            raise ValueError(error)
 
         token = context["request"].headers["authorization"].split(' ')
 
         if token[0] != "Bearer":
-            raise ValueError("Unauthorized. Please login.")
+            raise ValueError(error)
 
-        black_token = BlacklistedToken.objects(token=token[1]).first()
+        blacklisted_token = BlacklistedToken.objects(token=token[1]).first()
 
-        if black_token is not None:
-            raise ValueError("Unauthorized. Please login.")
+        if blacklisted_token is not None:
+            raise ValueError(error)
 
         return token[1]
 

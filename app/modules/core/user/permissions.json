@@ -17,5 +17,9 @@
     "find_user_by_email": {
         "route": "user:find_user_by_email",
         "description": "Allow user to retrieve any user by their email."
+    },
+    "update_email": {
+        "route": "user:update_email",
+        "description": "Allow a user to update any users email."
     }
 }

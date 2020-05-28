@@ -3,7 +3,6 @@ from modules.core.auth.service import AuthService
 import pytest
 from uuid import uuid4
 from faker import Faker
-from modules.core.auth.models import JwtPayload
 from modules.core.auth.repository import AuthRepository
 from modules.core.user.repository import UserRepository
 from modules.core.role.repository import RoleRepository
@@ -130,6 +129,22 @@ def test_can_get_all_users_permissions():
 
     assert len(users_permissions["permissions"]) > 0
 
+
+def test_can_update_users_email():
+    User(
+        id=str(uuid4()),
+        email="update@test.com",
+        password=_auth_service.hash_password("T35tpass")
+    ).save()
+
+    data = {}
+    data["currentEmail"] = "update@test.com"
+    data["newEmail"] = "updated@test.com"
+    data["password"] = "T35tpass"
+
+    result = _user_repo.update_email(data)
+
+    assert result is True
 
 def tests_teardown():
     drop_all_collections()

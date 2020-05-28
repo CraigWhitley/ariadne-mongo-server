@@ -26,6 +26,34 @@ class UserRepository:
 
         raise ValueError("User not found.")
 
+    def update_email(self, data: dict) -> bool:
+        current_email = data["currentEmail"]
+        new_email = data["newEmail"]
+        password = data["password"]
+
+        if self._validation_service.validate_email(current_email) is False:
+            raise ValueError("Supplied current email is invalid.")
+
+        if self._validation_service.check_email_exists(current_email) is False:
+            raise ValueError("Email does not exist.")
+
+        if self._validation_service.validate_email(new_email) is False:
+            raise ValueError("New email is invalid.")
+
+        if self._validation_service.validate_password(password) is False:
+            raise ValueError("Password is invalid.")
+
+        user = self.find_user_by_email(current_email)
+
+        if self._auth_service.check_password(password, user.password) is False:
+            raise ValueError("Login failed.")
+
+        user.email = new_email
+
+        user.save()
+
+        return True
+
     def get_users_permissions(self, email: str) -> []:
         if self._validation_service.validate_email(email):
             """Returns a list of all a users permissions """
