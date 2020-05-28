@@ -27,6 +27,7 @@ class UserRepository:
         raise ValueError("User not found.")
 
     def update_email(self, data: dict) -> bool:
+
         current_email = data["currentEmail"]
         new_email = data["newEmail"]
         password = data["password"]
@@ -50,9 +51,15 @@ class UserRepository:
 
         user.email = new_email
 
+        token = self._auth_service.get_token(new_email)
+
+        self._auth_service.blacklist_token(user.access_token)
+
+        user.access_token = token
+
         user.save()
 
-        return True
+        return user
 
     def get_users_permissions(self, email: str) -> []:
         if self._validation_service.validate_email(email):

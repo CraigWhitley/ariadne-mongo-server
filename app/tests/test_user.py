@@ -89,7 +89,7 @@ def test_resolve_me():
     """
     user = generate_user()
 
-    token = _auth_repo.get_token(user.email)
+    token = _auth_service.get_token(user.email)
 
     user.access_token = token
 
@@ -142,9 +142,10 @@ def test_can_update_users_email():
     data["newEmail"] = "updated@test.com"
     data["password"] = "T35tpass"
 
-    result = _user_repo.update_email(data)
+    user = _user_repo.update_email(data)
 
-    assert result is True
+    assert user.email == data["newEmail"]
+
 
 def tests_teardown():
     drop_all_collections()

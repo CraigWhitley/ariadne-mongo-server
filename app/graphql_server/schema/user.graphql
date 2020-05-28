@@ -33,5 +33,5 @@ extend type Query {
 
 extend type Mutation {
     addRoleToUser(data: UserRoleInput!): User
-    updateEmail(data: UpdateEmailInput!): Boolean!
+    updateEmail(data: UpdateEmailInput!): User!
 }

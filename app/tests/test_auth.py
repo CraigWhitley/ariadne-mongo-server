@@ -111,7 +111,7 @@ def test_can_retrieve_jwt_string_from_email():
     """
 
     email = "test@test.com"
-    jwt_result = _repo.get_token(email)
+    jwt_result = _service.get_token(email)
 
     assert isinstance(jwt_result, str)
 
@@ -119,7 +119,7 @@ def test_can_retrieve_jwt_string_from_email():
 def setup_logout_a_user(email: str):
     email = email
 
-    token = _repo.get_token(email)
+    token = _service.get_token(email)
 
     User(
         id=str(uuid4()),

@@ -4,11 +4,12 @@ import os
 from modules.core.logging.logging_service import LoggingService
 from modules.core.logging.models import LogEntry, LogLevel
 from modules.core.user.models import User
-from .models import BlacklistedToken
+from .models import BlacklistedToken, JwtPayload
 import functools
 from graphql import GraphQLResolveInfo
 from modules.core.role.errors import UnauthorizedError
 from .settings import AuthSettings
+from uuid import uuid4
 
 # TODO: [TEST] We only have 57% here.
 
@@ -32,6 +33,17 @@ class AuthService:
 
     def get_logger(self):
         return self._logger
+
+    def get_token(self, email: str) -> str:
+        """
+        Gets encoded JWT token as a UTF8 string from email input.
+        """
+        payload = JwtPayload(email)
+        encoded_jwt = self.encode_jwt(payload.get())
+
+        token = str(encoded_jwt, encoding="utf8")
+
+        return token
 
     def encode_jwt(self, payload: dict) -> bytes:
         """
@@ -125,6 +137,9 @@ class AuthService:
             raise ValueError(error)
 
         return token[1]
+
+    def blacklist_token(self, token: str):
+        BlacklistedToken(id=str(uuid4()), token=token).save()
 
     def get_user_from_token(self, token: str) -> User:
         """Retrieves the tokens user from the database"""

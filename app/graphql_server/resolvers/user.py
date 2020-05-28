@@ -34,7 +34,7 @@ def resolve_get_users_permissions(_, info, email: str):
 
 
 @authenticate("user:update_email")
-def resolve_update_email(_, info, data: dict) -> bool:
+def resolve_update_email(_, info, data: dict) -> User:
     result = _repo.update_email(data)
 
     return result
