@@ -151,6 +151,7 @@ class AuthService:
 
         email = decoded["email"]
 
+        # TODO: [REFACTOR] The service should defer any data access to a repo.
         user = User.objects(email=email).first()
 
         if user is not None:

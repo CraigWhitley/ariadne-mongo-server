@@ -24,6 +24,11 @@ input UpdateEmailInput {
     password: String!
 }
 
+input AddSinglePermission {
+    email: String!
+    route: String!
+}
+
 extend type Query {
     getAllUsers(skip: Int!, take: Int!): [User!]!
     findUserByEmail(email: String!):User
@@ -34,4 +39,6 @@ extend type Query {
 extend type Mutation {
     addRoleToUser(data: UserRoleInput!): User
     updateEmail(data: UpdateEmailInput!): User!
+    addWhitelistToUser(data: AddSinglePermission): User!
+    addBlacklistToUser(data: AddSinglePermission): User!
 }

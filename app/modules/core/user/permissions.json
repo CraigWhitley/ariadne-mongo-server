@@ -21,5 +21,13 @@
     "update_email": {
         "route": "user:update_email",
         "description": "Allow a user to update any users email."
+    },
+    "add_whitelist": {
+        "route": "user:add_whitelist_to_user",
+        "description": "Allow a user to add a whitelist to any user."
+    },
+    "add_blacklist": {
+        "route": "user:add_blacklist_to_user",
+        "description": "Allow a user to add a blacklist to any user."
     }
 }

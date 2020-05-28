@@ -1,7 +1,6 @@
 from modules.core.auth.service import authenticate
 from modules.core.permission.repository import PermissionRepository
 
-# TODO: [PERM] Create Permission repository
 _repo = PermissionRepository()
 
 
@@ -10,6 +9,7 @@ def resolve_get_all_permissions(_, info):
     permissions = _repo.get_all_permissions()
 
     return permissions
+
 
 @authenticate("role:create_new_permission")
 def resolve_create_new_permission(_, info, route: str, description: str):

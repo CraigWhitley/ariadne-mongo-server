@@ -38,3 +38,17 @@ def resolve_update_email(_, info, data: dict) -> User:
     result = _repo.update_email(data)
 
     return result
+
+
+@authenticate("user:add_whitelist_to_user")
+def resolve_add_whitelist_to_user(_, info, data: dict) -> User:
+    user = _repo.add_whitelist_to_user(data)
+
+    return user
+
+
+@authenticate("user:add_blacklist_to_user")
+def resolve_add_blacklist_to_user(_, info, data: dict) -> User:
+    user = _repo.add_blacklist_to_user(data)
+
+    return user

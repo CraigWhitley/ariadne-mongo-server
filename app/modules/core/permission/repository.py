@@ -17,3 +17,11 @@ class PermissionRepository:
         ).save()
 
         return new_perm
+
+    def get_permission_from_route(self, route: str) -> Permission:
+        # TODO: [VALIDATE] permissions route.
+        # Regex tex_t:text
+
+        permission = Permission.objects(route=route).first()
+
+        return permission

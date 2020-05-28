@@ -149,6 +149,50 @@ def test_can_update_users_email():
     assert user.email == data["newEmail"]
 
 
+def test_can_add_whitelist_to_user():
+    user = generate_user().save()
+
+    route = "test:route"
+
+    _perm_repo.create_new_permission(route, "Just a test")
+
+    data = {}
+    data["email"] = user.email
+    data["route"] = route
+
+    saved_user = _user_repo.add_whitelist_to_user(data)
+
+    result = False
+
+    for perm in saved_user.whitelist:
+        if perm.route == route:
+            result = True
+
+    assert result is True
+
+
+def test_can_add_blacklist_to_user():
+    user = generate_user().save()
+
+    route = "test:route"
+
+    _perm_repo.create_new_permission(route, "Just a test")
+
+    data = {}
+    data["email"] = user.email
+    data["route"] = route
+
+    saved_user = _user_repo.add_blacklist_to_user(data)
+
+    result = False
+
+    for perm in saved_user.blacklist:
+        if perm.route == route:
+            result = True
+
+    assert result is True
+
+
 def tests_teardown():
     drop_all_collections()
     teardown()

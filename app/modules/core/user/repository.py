@@ -1,12 +1,15 @@
 from .models import User
 from modules.core.user.validation_service import ValidationService
 from modules.core.auth.service import AuthService
+from modules.core.permission.repository import PermissionRepository
 
 
 class UserRepository:
 
     _validation_service = ValidationService()
     _auth_service = AuthService()
+
+    _perm_repo = PermissionRepository()
 
     def get_all_users(self, skip=0, take=25):
         return User.objects[skip:take+skip]
@@ -84,3 +87,51 @@ class UserRepository:
                     permissions["permissions"].append(perm)
 
             return permissions
+
+    def add_whitelist_to_user(self, data: dict) -> User:
+        new_data = self.get_validated_user_and_permission(data)
+
+        user = new_data["user"]
+        permission = new_data["permission"]
+
+        user.whitelist.append(permission)
+
+        result = user.save()
+
+        return result
+
+    def add_blacklist_to_user(self, data: dict) -> User:
+        new_data = self.get_validated_user_and_permission(data)
+
+        user = new_data["user"]
+        permission = new_data["permission"]
+
+        user.blacklist.append(permission)
+
+        result = user.save()
+
+        return result
+
+    def get_validated_user_and_permission(self, data: dict) -> dict:
+
+        email = data["email"]
+        route = data["route"]
+
+        if self._validation_service.validate_email(email) is False:
+            raise ValueError("Email invalid.")
+
+        user = self.find_user_by_email(email)
+
+        if user is None:
+            raise ValueError("User not found.")
+
+        permission = self._perm_repo.get_permission_from_route(route)
+
+        if permission is None:
+            raise ValueError("Route invalid.")
+
+        result = {}
+        result["user"] = user
+        result["permission"] = permission
+
+        return result
