@@ -10,7 +10,7 @@ class AuthRepository:
     _auth_service = AuthService()
 
     # TODO: [TEST] auth/repository test coverage.
-    def register_user(self, data: dict):
+    def register_user(self, data: dict) -> User:
         """
         Allows a user to register a new account.
         """
@@ -24,7 +24,7 @@ class AuthRepository:
 
         return user
 
-    def login(self, data: dict):
+    def login(self, data: dict) -> User:
         """
         Allows a user to login with email and password.
         """

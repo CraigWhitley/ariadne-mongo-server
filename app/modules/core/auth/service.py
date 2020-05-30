@@ -10,6 +10,7 @@ import functools
 from graphql import GraphQLResolveInfo
 from modules.core.role.errors import UnauthorizedError
 from uuid import uuid4
+from typing import Dict, Any, Tuple
 
 # TODO: [TEST] We only have 57% here.
 
@@ -31,7 +32,7 @@ class AuthService:
         else:
             return False
 
-    def get_logger(self):
+    def get_logger(self) -> LoggingService:
         return self._logger
 
     def get_token(self, email: str) -> str:
@@ -59,7 +60,7 @@ class AuthService:
 
         return encoded
 
-    def decode_jwt(self, token: bytes) -> dict:
+    def decode_jwt(self, token: bytes) -> Dict[str, Any]:
         """Returns a decoded JWT's payload"""
 
         key = os.getenv("JWT_SECRET")
@@ -95,7 +96,7 @@ class AuthService:
 
         return decoded
 
-    def get_client_ip_address(self, context: dict) -> (str, int):
+    def get_client_ip_address(self, context: dict) -> Tuple(str, int):
         request = context["request"]
 
         client = request.get('client')

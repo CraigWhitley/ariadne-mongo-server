@@ -2,13 +2,14 @@ from .models import Role
 from modules.core.permission.models import Permission
 from uuid import uuid4
 from modules.core.validation.service import ValidationService
+from typing import List
 
 
 class RoleRepository:
 
     _val_service = ValidationService()
 
-    def get_all_roles(self) -> [Role]:
+    def get_all_roles(self) -> List[Role]:
         return Role.objects.all()
 
     def add_permission_to_role(self, data: dict) -> Role:

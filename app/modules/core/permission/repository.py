@@ -1,13 +1,14 @@
 from .models import Permission
 from uuid import uuid4
 from modules.core.validation.service import ValidationService
+from typing import List
 
 
 class PermissionRepository:
 
     _val_service = ValidationService()
 
-    def get_all_permissions(self) -> [Permission]:
+    def get_all_permissions(self) -> List[Permission]:
         return Permission.objects.all()
 
     def create_new_permission(self, route: str,
@@ -16,13 +17,13 @@ class PermissionRepository:
         if self._val_service.validate_permission_route(route) is False:
             raise ValueError("Route is invalid.")
 
-        new_perm = Permission(
+        permission = Permission(
             id=str(uuid4()),
             route=route,
             description=description
         ).save()
 
-        return new_perm
+        return permission
 
     def find_permission_by_route(self, route: str) -> Permission:
         

@@ -3,7 +3,9 @@ from modules.core.role.repository import RoleRepository
 from modules.core.validation.service import ValidationService
 from modules.core.auth.service import AuthService
 from modules.core.permission.repository import PermissionRepository
+from modules.core.permission.models import Permission
 import datetime as dt
+from typing import List, Dict, Any
 
 
 class UserRepository:
@@ -16,7 +18,7 @@ class UserRepository:
 
     _del_blacklist_route = "user:delete_blacklist_from_user"
 
-    def get_all_users(self, skip=0, take=25) -> [User]:
+    def get_all_users(self, skip=0, take=25) -> List[User]:
         return User.objects[skip:take+skip]
 
     def find_user_by_email(self, email: str) -> User:
@@ -42,7 +44,7 @@ class UserRepository:
 
         raise ValueError("User not found.")
 
-    def update_email(self, data: dict) -> bool:
+    def update_email(self, data: dict) -> User:
 
         user_id = data["userId"]
         current_email = data["currentEmail"]
@@ -84,7 +86,9 @@ class UserRepository:
 
         return user
 
-    def get_users_permissions(self, user_id: str) -> dict:
+    def get_users_permissions(self,
+                              user_id: str) -> Dict[str, List[Permission]]:
+
         if self._val_service.validate_uuid4(user_id) is False:
             raise ValueError("Invalid ID.")
 
@@ -239,7 +243,8 @@ class UserRepository:
 
         return user
 
-    def _get_validated_user_and_permission(self, data: dict) -> dict:
+    def _get_validated_user_and_permission(self,
+                                           data: dict) -> Dict[str, Any]:
         """
         Helper function to reduce duplicate code in the whitelist
         and blacklist functions.
