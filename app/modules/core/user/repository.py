@@ -273,3 +273,5 @@ class UserRepository:
         result["permission"] = permission
 
         return result
+
+    # TODO: [USER] Add ability to toggle active status

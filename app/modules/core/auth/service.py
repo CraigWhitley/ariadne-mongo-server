@@ -203,6 +203,9 @@ def authenticate(permission):
             if user is None:
                 raise UnauthorizedError(error)
 
+            if user.is_active is False:
+                raise UnauthorizedError(error)
+
             # blacklist takes precedence
             for perm in user.blacklist:
                 if perm.route == permission:

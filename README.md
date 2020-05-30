@@ -1,5 +1,5 @@
-# maintesoft-server
-Ariadne GraphQL backend for Maintesoft
+# Ariadne GraphQL server for MongoDB
+Ariadne GraphQL server for MongoDB
 
 .env:=
 
