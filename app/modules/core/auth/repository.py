@@ -6,7 +6,7 @@ import datetime as dt
 
 class AuthRepository:
 
-    _validation_service = ValidationService()
+    _val_service = ValidationService()
     _auth_service = AuthService()
 
     # TODO: [TEST] auth/repository test coverage.
@@ -14,7 +14,7 @@ class AuthRepository:
         """
         Allows a user to register a new account.
         """
-        user = self._validation_service.validate_user_model(data)
+        user = self._val_service.validate_user_model(data)
 
         token = self._auth_service.get_token(user.email)
 
@@ -39,8 +39,8 @@ class AuthRepository:
 
         user = None
 
-        if self._validation_service.validate_email(email):
-            if self._validation_service.check_email_exists(email):
+        if self._val_service.validate_email(email):
+            if self._val_service.check_email_exists(email):
                 user = User.objects(email=email).first()
             else:
                 raise ValueError("Login incorrect.")
@@ -48,7 +48,7 @@ class AuthRepository:
             raise ValueError("Invalid email.")
 
         if user is not None:
-            if self._validation_service.validate_password(password):
+            if self._val_service.validate_password(password):
                 if self._auth_service.check_password(password, user.password):
                     token = self._auth_service.get_token(email)
 

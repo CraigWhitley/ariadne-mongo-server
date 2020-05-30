@@ -4,11 +4,11 @@ import os
 from modules.core.logging.logging_service import LoggingService
 from modules.core.logging.models import LogEntry, LogLevel
 from modules.core.user.models import User
+from .settings import AuthSettings
 from .models import BlacklistedToken, JwtPayload
 import functools
 from graphql import GraphQLResolveInfo
 from modules.core.role.errors import UnauthorizedError
-from .settings import AuthSettings
 from uuid import uuid4
 
 # TODO: [TEST] We only have 57% here.

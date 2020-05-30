@@ -27,8 +27,8 @@ def resolve_me(_, info) -> User:
 
 
 @authenticate("user:get_users_permissions")
-def resolve_get_users_permissions(_, info, email: str):
-    permissions = _repo.get_users_permissions(email)
+def resolve_get_users_permissions(_, info, user_id: str):
+    permissions = _repo.get_users_permissions(user_id)
 
     return permissions
 

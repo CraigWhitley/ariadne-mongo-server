@@ -127,26 +127,27 @@ def test_can_get_all_users_permissions():
 
     saved_user.save()
 
-    users_permissions = _user_repo.get_users_permissions(saved_user.email)
+    users_permissions = _user_repo.get_users_permissions(saved_user.id)
 
     assert len(users_permissions["permissions"]) > 0
 
 
 def test_can_update_users_email():
-    User(
+    user = User(
         id=str(uuid4()),
         email="update@test.com",
         password=_auth_service.hash_password("T35tpass")
     ).save()
 
     data = {}
-    data["currentEmail"] = "update@test.com"
+    data["userId"] = user.id
+    data["currentEmail"] = user.email
     data["newEmail"] = "updated@test.com"
     data["password"] = "T35tpass"
 
-    user = _user_repo.update_email(data)
+    saved_user = _user_repo.update_email(data)
 
-    assert user.email == data["newEmail"]
+    assert saved_user.email == data["newEmail"]
 
 
 def test_can_add_whitelist_to_user():
@@ -154,11 +155,11 @@ def test_can_add_whitelist_to_user():
 
     route = "test:route"
 
-    _perm_repo.create_new_permission(route, "Just a test")
+    permission = _perm_repo.create_new_permission(route, "Just a test")
 
     data = {}
-    data["email"] = user.email
-    data["route"] = route
+    data["userId"] = user.id
+    data["permissionId"] = permission.id
 
     saved_user = _user_repo.add_whitelist_to_user(data)
 
@@ -174,13 +175,15 @@ def test_can_add_whitelist_to_user():
 def test_can_add_blacklist_to_user():
     user = generate_user().save()
 
+    load_permissions()
+
     route = "test:route"
 
-    _perm_repo.create_new_permission(route, "Just a test")
+    permission = _perm_repo.create_new_permission(route, "Just a test")
 
     data = {}
-    data["email"] = user.email
-    data["route"] = route
+    data["userId"] = user.id
+    data["permissionId"] = permission.id
 
     saved_user = _user_repo.add_blacklist_to_user(data)
 

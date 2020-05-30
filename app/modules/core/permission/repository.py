@@ -1,8 +1,11 @@
 from .models import Permission
 from uuid import uuid4
+from modules.core.user.validation_service import ValidationService
 
 
 class PermissionRepository:
+
+    _val_service = ValidationService()
 
     def get_all_permissions(self) -> [Permission]:
         return Permission.objects.all()
@@ -23,5 +26,14 @@ class PermissionRepository:
         # Regex tex_t:text
 
         permission = Permission.objects(route=route).first()
+
+        return permission
+
+    def find_permission_by_id(self, permission_id: str) -> Permission:
+
+        if self._val_service.validate_uuid4(permission_id) is False:
+            raise ValueError("Permission ID invalid.")
+
+        permission = Permission.objects(id=permission_id).first()
 
         return permission

@@ -19,21 +19,22 @@ input UserRoleInput {
 }
 
 input UpdateEmailInput {
+    userId: String!
     currentEmail: String!
     newEmail: String!
     password: String!
 }
 
 input AddSinglePermission {
-    email: String!
-    route: String!
+    user_id: String!
+    permission_id: String!
 }
 
 extend type Query {
     getAllUsers(skip: Int!, take: Int!): [User!]!
     findUserByEmail(email: String!):User
     me: User
-    getUsersPermissions(email: String):UsersPermissions
+    getUsersPermissions(user_id: String!):UsersPermissions
 }
 
 extend type Mutation {

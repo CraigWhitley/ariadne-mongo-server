@@ -10,6 +10,8 @@ class ValidationService:
 
     _email_regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
 
+    _uuid4_regex = r"[0-9a-f]{8}-?[0-9a-f]{4}-?4[0-9a-f]{3}-?[89ab][0-9a-f]{3}-?[0-9a-f]{12}"
+
     # One uppercase, one lowercase, one number. Min 8, max 128.
     _password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,128}$)"
 
@@ -17,7 +19,6 @@ class ValidationService:
         """
         Validates the user model
         """
-
         id = str(uuid4())
         email = user_input["email"]
         password = user_input["password"]
@@ -39,13 +40,33 @@ class ValidationService:
 
     def check_email_exists(self, email: str) -> bool:
         """Checks to see if email exists in database"""
-        if User.objects(email__iexact=email):
+
+        if User.objects(email__exists=email):
             return True
         else:
             return False
 
+    def check_id_exists(self, id: str) -> bool:
+        if User.objects(id__exists=id):
+            return True
+        else:
+            return False
+
+    def validate_uuid4(self, id: str) -> bool:
+        """Ensures the uuid4 id's are valid"""
+
+        return bool(re.match(self._uuid4_regex, id))
+
+    def validate_many_uuid4(self, data: dict) -> bool:
+        for key in data:
+            if self.validate_uuid4(data[key]) is False:
+                raise ValueError("{} is invalid.".format(key))
+
+        return True
+
     def validate_email(self, email: str) -> bool:
         """Ensures an email address is in the correct format"""
+
         return bool(re.match(self._email_regex, email))
 
     # Password must have at least 8 characters
@@ -53,6 +74,7 @@ class ValidationService:
     # at least one lower case letter and at least one
     # number or special character.
     def validate_password(self, password: str) -> bool:
+
         """Ensures password meets security requirements:
         min 8, max 128, 1 uppercase, 1 lowercase, 1 number"""
         return bool(re.match(self._password_regex, password))

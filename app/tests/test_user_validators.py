@@ -3,6 +3,7 @@ from modules.core.user.validation_service import ValidationService
 import pytest
 from .setup import register_test_db, register_test_injections, teardown,\
                     drop_all_collections
+from uuid import uuid4
 
 _service = ValidationService()
 
@@ -76,6 +77,18 @@ def test_user_email_already_exists_validation(user):
 
     with pytest.raises(ValueError):
         _service.validate_user_model(user)
+
+
+def test_many_uuids_validates_true():
+    """
+    Tests that validated multiple valid UUID4s
+    returns true
+    """
+    data = {}
+    data["someId"] = str(uuid4())
+    data["someOtherId"] = str(uuid4())
+
+    assert _service.validate_many_uuid4(data) is True
 
 
 def tests_teardown():

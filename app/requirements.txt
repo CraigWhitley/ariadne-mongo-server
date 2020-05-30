@@ -1,0 +1,14 @@
+# app
+ariadne>=0.11.0,<1
+python-dotenv>=0.13.0,<1
+gunicorn>=20.0.4,<21
+uvicorn>=0.11.5,<1
+mongoengine>=0.20.0,<1
+bcrypt>=3.1.7,<4
+pyjwt>=1.7.1,<2
+colorama>=0.4.3,<1
+inject>=4.2.0,<5
+# testing
+pytest-cov>=2.9.0,<3
+pytest>=5.4.2,<6
+faker>=4.1.0,<5

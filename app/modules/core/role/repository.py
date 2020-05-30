@@ -2,14 +2,19 @@ from .models import Role
 from modules.core.permission.models import Permission
 from modules.core.user.models import User
 from uuid import uuid4
+from modules.core.user.validation_service import ValidationService
 
 
 class RoleRepository:
+
+    _val_service = ValidationService()
 
     def get_all_roles(self) -> [Role]:
         return Role.objects.all()
 
     def add_permission_to_role(self, data: dict) -> Role:
+
+        self._val_service.validate_many_uuid4(data)
 
         permission_id = data["permissionId"]
         role_id = data["roleId"]
@@ -32,21 +37,18 @@ class RoleRepository:
         return role
 
     def add_role_to_user(self, data: dict) -> User:
+
+        self._val_service.validate_many_uuid4(data)
+
         user_id = data["userId"]
         role_id = data["roleId"]
-
-        if user_id is None:
-            raise ValueError("User id must be supplied.")
-
-        if role_id is None:
-            raise ValueError("Role id must be supplied")
 
         role = Role.objects(id=role_id).first()
 
         if role is None:
             raise ValueError("Role not found.")
 
-        count = User.objects(id=user_id).update_one(push__roles=role)
+        count = User.objects(id=user_id).update_one(add_to_set__roles=role)
 
         if count == 0:
             raise ValueError("User not found. No roles updated.")
@@ -65,4 +67,3 @@ class RoleRepository:
         ).save()
 
         return role
-
