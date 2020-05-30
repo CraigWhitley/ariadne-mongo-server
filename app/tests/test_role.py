@@ -23,6 +23,7 @@ _auth_service = AuthService()
 def setup():
     register_test_db()
     register_test_injections()
+    drop_all_collections()
     load_permissions()
 
 

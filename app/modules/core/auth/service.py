@@ -10,7 +10,8 @@ import functools
 from graphql import GraphQLResolveInfo
 from modules.core.role.errors import UnauthorizedError
 from uuid import uuid4
-from typing import Dict, Any, Tuple
+from typing import Dict, Any
+from dotenv import load_dotenv
 
 # TODO: [TEST] We only have 57% here.
 
@@ -54,13 +55,14 @@ class AuthService:
         :return: Encoded JWT token
         :rtype: bytes
         """
+        load_dotenv()
         key = os.getenv("JWT_SECRET")
 
         encoded = jwt.encode(payload, key, algorithm="HS256")
 
         return encoded
 
-    def decode_jwt(self, token: bytes) -> Dict[str, Any]:
+    def decode_jwt(self, token: bytes):
         """Returns a decoded JWT's payload"""
 
         key = os.getenv("JWT_SECRET")
@@ -96,7 +98,7 @@ class AuthService:
 
         return decoded
 
-    def get_client_ip_address(self, context: dict) -> Tuple(str, int):
+    def get_client_ip_address(self, context: dict) -> (str, int):
         request = context["request"]
 
         client = request.get('client')

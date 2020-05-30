@@ -2,7 +2,6 @@ from modules.core.user.models import User
 from modules.core.auth.models import JwtPayload
 from modules.core.auth.service import AuthService
 import pytest
-from dotenv import load_dotenv
 from uuid import uuid4
 from modules.core.user.repository import UserRepository
 from modules.core.auth.repository import AuthRepository
@@ -22,7 +21,6 @@ _user_repo = UserRepository()
 def setup():
     register_test_db()
     register_test_injections()
-    load_dotenv()
 
 
 @pytest.fixture()
