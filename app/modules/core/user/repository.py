@@ -243,6 +243,19 @@ class UserRepository:
 
         return user
 
+    def update_users_active_status(self, data: dict) -> User:
+
+        user_id = data["userId"]
+        is_active = data["isActive"]
+
+        user = self.find_user_by_id(user_id)
+
+        user.is_active = is_active
+
+        user = user.save()
+
+        return user
+
     def _get_validated_user_and_permission(self,
                                            data: dict) -> Dict[str, Any]:
         """
@@ -274,4 +287,3 @@ class UserRepository:
 
         return result
 
-    # TODO: [USER] Add ability to toggle active status

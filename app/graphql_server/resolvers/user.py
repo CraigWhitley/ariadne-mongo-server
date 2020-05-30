@@ -74,3 +74,9 @@ def resolve_delete_whitelist_from_user(_, info, data: dict) -> User:
     user = _repo.delete_whitelist_from_user(data)
 
     return user
+
+@authenticate("user:update_users_active_status")
+def resolve_update_users_active_status(_, info, data: dict) -> User:
+    user = _repo.update_users_active_status(data)
+
+    return user

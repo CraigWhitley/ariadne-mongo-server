@@ -8,7 +8,8 @@ from .user import resolve_update_email, \
                     resolve_add_whitelist_to_user, \
                     resolve_delete_blacklist_from_user, \
                     resolve_delete_whitelist_from_user, \
-                    resolve_add_role_to_user
+                    resolve_add_role_to_user, \
+                    resolve_update_users_active_status
 from .permission import resolve_create_new_permission
 
 mutation = MutationType()
@@ -28,3 +29,5 @@ mutation.set_field("deleteBlacklistFromUser",
                    resolve_delete_blacklist_from_user)
 mutation.set_field("deleteWhitelistFromUser",
                    resolve_delete_whitelist_from_user)
+mutation.set_field("updateUsersActiveStatus",
+                   resolve_update_users_active_status)

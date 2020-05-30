@@ -94,6 +94,18 @@ def test_register_user_returns_correct_users_email():
     assert result.email == "correct@email.com"
 
 
+def test_can_update_users_active_status():
+    user = generate_user().save()
+
+    data = {}
+    data["userId"] = user.id
+    data["isActive"] = False
+
+    user = _user_repo.update_users_active_status(data)
+
+    assert user.is_active is False
+
+
 def test_resolve_me():
     """
     Tests a user can be retrieved using the JWT token in the

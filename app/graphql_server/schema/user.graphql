@@ -26,15 +26,20 @@ input UpdateEmailInput {
 }
 
 input UpdateSinglePermission {
-    user_id: String!
-    permission_id: String!
+    userId: String!
+    permissionId: String!
+}
+
+input UpdateUsersActiveStatus {
+    userId: String!
+    isActive: Boolean!
 }
 
 extend type Query {
     getAllUsers(skip: Int!, take: Int!): [User!]!
     findUserByEmail(email: String!):User
     me: User
-    getUsersPermissions(user_id: String!):UsersPermissions
+    getUsersPermissions(userId: String!):UsersPermissions
 }
 
 extend type Mutation {
@@ -44,4 +49,5 @@ extend type Mutation {
     addBlacklistToUser(data: UpdateSinglePermission!): User!
     deleteWhitelistFromUser(data: UpdateSinglePermission!): User!
     deleteBlacklistFromUser(data: UpdateSinglePermission!): User!
+    updateUsersActiveStatus(data: UpdateUsersActiveStatus!): User!
 }

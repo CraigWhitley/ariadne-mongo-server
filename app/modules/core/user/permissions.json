@@ -38,5 +38,9 @@
     "add_role_to_user": {
         "route": "user:add_role_to_user",
         "description": "Allow a user to add a role to any user."
+    },
+    "update_users_active_status": {
+        "route": "user:update_users_active_status",
+        "description": "Allows a user to update any users active status."
     }
 }
