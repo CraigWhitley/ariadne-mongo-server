@@ -7,10 +7,6 @@
         "route": "role:add_permission_to_role",
         "description": "Allow a user to add a permission to a role."
     },
-    "add_role_to_user": {
-        "route": "role:add_role_to_user",
-        "description": "Allow a user to add a role to a user."
-    },
     "create_new_role":{
         "route": "role:create_new_role",
         "description": "Allow a user to create a new role."

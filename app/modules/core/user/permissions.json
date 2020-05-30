@@ -3,17 +3,14 @@
         "route": "user:me",
         "description": "Allow a user to retrieve their account information."
     },
-
     "get_users_permissions": {
         "route": "user:get_users_permissions",
         "description": "Get a list of all a users permissions."
     },
-
     "all_users": {
         "route": "user:get_all_users",
         "description": "Allow user to retrieve a list of all users."
     },
-
     "find_user_by_email": {
         "route": "user:find_user_by_email",
         "description": "Allow user to retrieve any user by their email."
@@ -37,5 +34,9 @@
     "delete_blacklist_from_user": {
         "route": "user:delete_blacklist_from_user",
         "description": "Allows a user to delete a blacklist from any user."
+    },
+    "add_role_to_user": {
+        "route": "user:add_role_to_user",
+        "description": "Allow a user to add a role to any user."
     }
 }

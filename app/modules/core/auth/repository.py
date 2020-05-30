@@ -83,5 +83,3 @@ class AuthRepository:
         else:
             return False
 
-    def get_auth_service(self):
-        return self._auth_service

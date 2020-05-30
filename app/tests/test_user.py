@@ -195,7 +195,7 @@ def test_can_remove_blacklist_from_user():
 
     _user_repo.add_blacklist_to_user(data)
 
-    user = _user_repo.remove_blacklist_from_user(data)
+    user = _user_repo.delete_blacklist_from_user(data)
 
     result = any(x.route == route for x in user.blacklist)
 
@@ -211,7 +211,7 @@ def test_can_remove_whitelist_from_user():
 
     _user_repo.add_whitelist_to_user(data)
 
-    user = _user_repo.remove_whitelist_from_user(data)
+    user = _user_repo.delete_whitelist_from_user(data)
 
     result = any(x.route == route for x in user.whitelist)
 
@@ -233,6 +233,29 @@ def _create_user_and_test_permission(route="test:route",
     data["permissionId"] = permission.id
 
     return data
+
+
+def test_can_add_role_to_user():
+    role = _role_repo.create_new_role("Testing Role")
+
+    user = User(
+        id=str(uuid4()),
+        email=faker.ascii_company_email(),
+        password=_auth_service.hash_password(
+                    faker.password(length=10,
+                                   digits=True,
+                                   upper_case=True,
+                                   lower_case=True)))
+
+    user.save()
+
+    data = {}
+    data["roleId"] = role.id
+    data["userId"] = user.id
+
+    result = _user_repo.add_role_to_user(data)
+
+    assert result is not None
 
 
 def tests_teardown():

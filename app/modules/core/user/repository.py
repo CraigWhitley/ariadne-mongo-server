@@ -1,4 +1,6 @@
 from .models import User
+from modules.core.role.models import Role
+from modules.core.role.repository import RoleRepository
 from modules.core.validation.service import ValidationService
 from modules.core.auth.service import AuthService
 from modules.core.permission.repository import PermissionRepository
@@ -10,6 +12,7 @@ class UserRepository:
     _auth_service = AuthService()
 
     _perm_repo = PermissionRepository()
+    _role_repo = RoleRepository()
 
     _del_blacklist_route = "user:delete_blacklist_from_user"
 
@@ -107,6 +110,27 @@ class UserRepository:
 
         return permissions
 
+    def add_role_to_user(self, data: dict) -> User:
+
+        self._val_service.validate_many_uuid4(data)
+
+        user_id = data["userId"]
+        role_id = data["roleId"]
+
+        role = self._role_repo.find_role_by_id(role_id)
+
+        if role is None:
+            raise ValueError("Role not found.")
+
+        count = User.objects(id=user_id).update_one(add_to_set__roles=role)
+
+        if count == 0:
+            raise ValueError("User not found. No roles updated.")
+
+        user = User.objects(id=user_id).first()
+
+        return user
+
     def add_whitelist_to_user(self, data: dict) -> User:
         new_data = self._get_validated_user_and_permission(data)
 
@@ -148,7 +172,7 @@ class UserRepository:
 
         return result
 
-    def remove_whitelist_from_user(self, data: dict) -> User:
+    def delete_whitelist_from_user(self, data: dict) -> User:
         data = self._get_validated_user_and_permission(data)
 
         user = data["user"]
@@ -165,7 +189,7 @@ class UserRepository:
 
         return result
 
-    def remove_blacklist_from_user(self, data: dict) -> User:
+    def delete_blacklist_from_user(self, data: dict) -> User:
         data = self._get_validated_user_and_permission(data)
 
         user = data["user"]

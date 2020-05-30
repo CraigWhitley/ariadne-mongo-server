@@ -25,7 +25,7 @@ input UpdateEmailInput {
     password: String!
 }
 
-input AddSinglePermission {
+input UpdateSinglePermission {
     user_id: String!
     permission_id: String!
 }
@@ -40,6 +40,8 @@ extend type Query {
 extend type Mutation {
     addRoleToUser(data: UserRoleInput!): User
     updateEmail(data: UpdateEmailInput!): User!
-    addWhitelistToUser(data: AddSinglePermission): User!
-    addBlacklistToUser(data: AddSinglePermission): User!
+    addWhitelistToUser(data: UpdateSinglePermission!): User!
+    addBlacklistToUser(data: UpdateSinglePermission!): User!
+    deleteWhitelistFromUser(data: UpdateSinglePermission!): User!
+    deleteBlacklistFromUser(data: UpdateSinglePermission!): User!
 }

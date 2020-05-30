@@ -36,26 +36,14 @@ class RoleRepository:
 
         return role
 
-    def add_role_to_user(self, data: dict) -> User:
+    def find_role_by_id(self, role_id: str) -> Role:
 
-        self._val_service.validate_many_uuid4(data)
-
-        user_id = data["userId"]
-        role_id = data["roleId"]
+        if self._val_service.validate_uuid4(role_id) is False:
+            raise ValueError("Invalid role id.")
 
         role = Role.objects(id=role_id).first()
 
-        if role is None:
-            raise ValueError("Role not found.")
-
-        count = User.objects(id=user_id).update_one(add_to_set__roles=role)
-
-        if count == 0:
-            raise ValueError("User not found. No roles updated.")
-
-        user = User.objects(id=user_id).first()
-
-        return user
+        return role
 
     def create_new_role(self, name: str) -> Role:
         if name is None:
