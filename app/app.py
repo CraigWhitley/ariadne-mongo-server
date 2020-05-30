@@ -12,7 +12,7 @@ from modules.core.database.db_service import DatabaseService
 from modules.core.database.models import ConnectionInput
 
 # TODO: [DOCS] Go through and make sure everything is documented
-# TODO: [LOG] Log all the things!
+# TODO: [LOG] Log
 
 load_dotenv()
 

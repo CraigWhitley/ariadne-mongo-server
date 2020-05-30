@@ -2,7 +2,7 @@ from .models import Role
 from modules.core.permission.models import Permission
 from modules.core.user.models import User
 from uuid import uuid4
-from modules.core.user.validation_service import ValidationService
+from modules.core.validation.service import ValidationService
 
 
 class RoleRepository:

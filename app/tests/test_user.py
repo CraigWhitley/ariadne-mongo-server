@@ -52,13 +52,23 @@ def test_user_is_created():
 
 
 def test_can_find_user_by_email():
-    """Tests whether a user can be queried by email"""
+    """Tests whether a user can be retrived by email"""
     user = generate_user()
     user.save()
 
     result = _user_repo.find_user_by_email(user.email)
 
     assert result.email == user.email
+
+
+def test_can_find_user_by_id():
+    """Tests whether a user can retrieved by id"""
+    user = generate_user()
+    user.save()
+
+    result = _user_repo.find_user_by_id(user.id)
+
+    assert result.id == user.id
 
 
 def test_can_retrieve_list_of_users():
@@ -151,15 +161,9 @@ def test_can_update_users_email():
 
 
 def test_can_add_whitelist_to_user():
-    user = generate_user().save()
-
     route = "test:route"
 
-    permission = _perm_repo.create_new_permission(route, "Just a test")
-
-    data = {}
-    data["userId"] = user.id
-    data["permissionId"] = permission.id
+    data = _create_user_and_test_permission(route, "Whitelist test.")
 
     saved_user = _user_repo.add_whitelist_to_user(data)
 
@@ -173,17 +177,11 @@ def test_can_add_whitelist_to_user():
 
 
 def test_can_add_blacklist_to_user():
-    user = generate_user().save()
-
     load_permissions()
 
-    route = "test:route"
+    route = "test:blacklist_route"
 
-    permission = _perm_repo.create_new_permission(route, "Just a test")
-
-    data = {}
-    data["userId"] = user.id
-    data["permissionId"] = permission.id
+    data = _create_user_and_test_permission(route, "Blacklist test.")
 
     saved_user = _user_repo.add_blacklist_to_user(data)
 
@@ -194,6 +192,34 @@ def test_can_add_blacklist_to_user():
             result = True
 
     assert result is True
+
+
+def test_can_remove_blacklist_from_user():
+    # TODO: [TEST] Remove blacklist
+    pass
+
+
+def test_can_remove_whitelist_from_user():
+    # TODO: [TEST] Remove whitelist
+    pass
+
+
+def _create_user_and_test_permission(route="test:route",
+                                     description="Just a test.") -> dict:
+    """
+    Helper function to generate a user and permission for the whitelist
+    and blacklist tests.
+    """
+    user = generate_user().save()
+
+    permission = _perm_repo.create_new_permission(route, description)
+
+    data = {}
+    data["userId"] = user.id
+    data["permissionId"] = permission.id
+
+    return data
+
 
 
 def tests_teardown():

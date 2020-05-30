@@ -1,5 +1,5 @@
 from modules.core.user.models import User
-from modules.core.user.validation_service import ValidationService
+from modules.core.validation.service import ValidationService
 import pytest
 from .setup import register_test_db, register_test_injections, teardown,\
                     drop_all_collections

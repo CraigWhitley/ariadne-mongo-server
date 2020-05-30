@@ -1,6 +1,6 @@
 from .models import Permission
 from uuid import uuid4
-from modules.core.user.validation_service import ValidationService
+from modules.core.validation.service import ValidationService
 
 
 class PermissionRepository:
@@ -13,6 +13,9 @@ class PermissionRepository:
     def create_new_permission(self, route: str,
                               description: str) -> Permission:
 
+        if self._val_service.validate_permission_route(route) is False:
+            raise ValueError("Route is invalid.")
+
         new_perm = Permission(
             id=str(uuid4()),
             route=route,
@@ -22,8 +25,9 @@ class PermissionRepository:
         return new_perm
 
     def get_permission_from_route(self, route: str) -> Permission:
-        # TODO: [VALIDATE] permissions route.
-        # Regex tex_t:text
+        
+        if self._val_service.validate_permission_route(route) is False:
+            raise ValueError("Route is invalid.")
 
         permission = Permission.objects(route=route).first()
 

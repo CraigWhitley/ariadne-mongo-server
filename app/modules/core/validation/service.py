@@ -12,6 +12,9 @@ class ValidationService:
 
     _uuid4_regex = r"[0-9a-f]{8}-?[0-9a-f]{4}-?4[0-9a-f]{3}-?[89ab][0-9a-f]{3}-?[0-9a-f]{12}"
 
+    # this_is_a:valid_route
+    _perm_route_regex = r"([a-z_]:?[a-z_])"
+
     # One uppercase, one lowercase, one number. Min 8, max 128.
     _password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,128}$)"
 
@@ -38,6 +41,11 @@ class ValidationService:
             password=self._auth_service.hash_password(password)
         )
 
+    def validate_permission_route(self, route: str) -> bool:
+        """ Validates the permission route"""
+
+        return bool(re.match(self._perm_route_regex, route))
+
     def check_email_exists(self, email: str) -> bool:
         """Checks to see if email exists in database"""
 
@@ -46,7 +54,9 @@ class ValidationService:
         else:
             return False
 
-    def check_id_exists(self, id: str) -> bool:
+    def check_user_id_exists(self, id: str) -> bool:
+        """Checks the user exists by id"""
+
         if User.objects(id__exists=id):
             return True
         else:

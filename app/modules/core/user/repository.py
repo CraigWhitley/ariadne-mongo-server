@@ -1,5 +1,5 @@
 from .models import User
-from modules.core.user.validation_service import ValidationService
+from modules.core.validation.service import ValidationService
 from modules.core.auth.service import AuthService
 from modules.core.permission.repository import PermissionRepository
 
@@ -47,11 +47,11 @@ class UserRepository:
         if self._val_service.validate_uuid4(user_id) is False:
             raise ValueError("User id is invalid.")
 
-        if self._val_service.check_id_exists(user_id) is False:
+        if self._val_service.check_user_id_exists(user_id) is False:
             raise ValueError("User not found.")
 
         if self._val_service.validate_email(current_email) is False:
-            raise ValueError("Supplied current email is invalid.")
+            raise ValueError("Current email is invalid.")
 
         if self._val_service.check_email_exists(current_email) is False:
             raise ValueError("Email does not exist.")
@@ -83,7 +83,7 @@ class UserRepository:
         if self._val_service.validate_uuid4(user_id) is False:
             raise ValueError("Invalid ID.")
 
-        if self._val_service.check_id_exists(user_id) is False:
+        if self._val_service.check_user_id_exists(user_id) is False:
             raise ValueError("User not found.")
 
         user = self.find_user_by_id(user_id)
@@ -159,7 +159,7 @@ class UserRepository:
 
         if count == 0:
             raise ValueError("Could not remove permission"
-                             "from users whitelist.")
+                             " from users whitelist.")
 
         result = self.find_user_by_id(user.id)
 
@@ -176,7 +176,7 @@ class UserRepository:
 
         if count == 0:
             raise ValueError("Could not remove permission"
-                             "from users blacklist.")
+                             " from users blacklist.")
 
         result = self.find_user_by_id(user.id)
 
