@@ -165,13 +165,9 @@ def test_can_add_whitelist_to_user():
 
     data = _create_user_and_test_permission(route, "Whitelist test.")
 
-    saved_user = _user_repo.add_whitelist_to_user(data)
+    user = _user_repo.add_whitelist_to_user(data)
 
-    result = False
-
-    for perm in saved_user.whitelist:
-        if perm.route == route:
-            result = True
+    result = any(x.route == route for x in user.whitelist)
 
     assert result is True
 
@@ -183,25 +179,43 @@ def test_can_add_blacklist_to_user():
 
     data = _create_user_and_test_permission(route, "Blacklist test.")
 
-    saved_user = _user_repo.add_blacklist_to_user(data)
+    user = _user_repo.add_blacklist_to_user(data)
 
-    result = False
-
-    for perm in saved_user.blacklist:
-        if perm.route == route:
-            result = True
+    result = any(x.route == route for x in user.blacklist)
 
     assert result is True
 
 
 def test_can_remove_blacklist_from_user():
-    # TODO: [TEST] Remove blacklist
-    pass
+    load_permissions()
+
+    route = "test:remove_blacklist_route"
+
+    data = _create_user_and_test_permission(route, "Test to remove blacklist.")
+
+    _user_repo.add_blacklist_to_user(data)
+
+    user = _user_repo.remove_blacklist_from_user(data)
+
+    result = any(x.route == route for x in user.blacklist)
+
+    assert result is False
 
 
 def test_can_remove_whitelist_from_user():
-    # TODO: [TEST] Remove whitelist
-    pass
+    load_permissions()
+
+    route = "test:remove_whitelist_route"
+
+    data = _create_user_and_test_permission(route, "Test for whitelists.")
+
+    _user_repo.add_whitelist_to_user(data)
+
+    user = _user_repo.remove_whitelist_from_user(data)
+
+    result = any(x.route == route for x in user.whitelist)
+
+    assert result is False
 
 
 def _create_user_and_test_permission(route="test:route",
@@ -219,7 +233,6 @@ def _create_user_and_test_permission(route="test:route",
     data["permissionId"] = permission.id
 
     return data
-
 
 
 def tests_teardown():

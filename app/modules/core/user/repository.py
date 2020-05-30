@@ -155,7 +155,7 @@ class UserRepository:
         permission = data["permission"]
 
         count = User.objects(id=user.id).update_one(
-                                    pull__whitelist=permission)
+                                    unset__whitelist=permission)
 
         if count == 0:
             raise ValueError("Could not remove permission"
@@ -171,8 +171,8 @@ class UserRepository:
         user = data["user"]
         permission = data["permission"]
 
-        count = User.objects(id=user.id).update_one(
-                                    pull_blacklist=permission)
+        count = User.objects(id=user.id).update(
+                                    unset__blacklist=permission)
 
         if count == 0:
             raise ValueError("Could not remove permission"

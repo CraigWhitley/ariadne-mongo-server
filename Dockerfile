@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.8-slim
 
 ENV PYTHONUNBUFFERED 1
 
@@ -7,10 +7,10 @@ RUN pip install --no-cache-dir uvicorn gunicorn
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r requirements.txt
 
-COPY ./app /app
-WORKDIR /app/
+COPY . /
+WORKDIR /
 
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=/
 
 EXPOSE 8000
 

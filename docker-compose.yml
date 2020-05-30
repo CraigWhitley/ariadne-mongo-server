@@ -3,7 +3,7 @@ services:
   app:
     build:
       context: ./app
-      dockerfile: ../DCDockerfile
+      dockerfile: ../Dockerfile
     ports:
       - "8000:8000"
     environment:
