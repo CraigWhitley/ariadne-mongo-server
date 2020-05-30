@@ -1,9 +1,9 @@
 from .models import User
-from modules.core.role.models import Role
 from modules.core.role.repository import RoleRepository
 from modules.core.validation.service import ValidationService
 from modules.core.auth.service import AuthService
 from modules.core.permission.repository import PermissionRepository
+import datetime as dt
 
 
 class UserRepository:
@@ -20,16 +20,18 @@ class UserRepository:
         return User.objects[skip:take+skip]
 
     def find_user_by_email(self, email: str) -> User:
-        if self._val_service.validate_email(email):
-            return User.objects(email=email).first()
-        else:
+
+        if self._val_service.validate_email(email) is False:
             raise ValueError("Invalid email provided.")
 
+        return User.objects(email=email).first()
+
     def find_user_by_id(self, user_id: str) -> User:
-        if self._val_service.validate_uuid4(user_id):
-            return User.objects(id=user_id).first()
-        else:
+
+        if self._val_service.validate_uuid4(user_id) is False:
             raise ValueError("Invalid id provided.")
+
+        return User.objects(id=user_id).first()
 
     def me(self, info) -> User:
         token = self._auth_service.get_token_from_request_header(info.context)
@@ -78,7 +80,7 @@ class UserRepository:
 
         user.access_token = token
 
-        user.save()
+        self.update_users_updated_at(user)
 
         return user
 
@@ -129,6 +131,8 @@ class UserRepository:
 
         user = User.objects(id=user_id).first()
 
+        self.update_users_updated_at(user)
+
         return user
 
     def add_whitelist_to_user(self, data: dict) -> User:
@@ -140,9 +144,11 @@ class UserRepository:
         User.objects(id=user.id).update_one(
                                     add_to_set__whitelist=permission)
 
-        result = User.objects(id=user.id).first()
+        user = User.objects(id=user.id).first()
 
-        return result
+        self.update_users_updated_at(user)
+
+        return user
 
     def add_blacklist_to_user(self, data: dict) -> User:
         data = self._get_validated_user_and_permission(data)
@@ -158,7 +164,7 @@ class UserRepository:
 
         # Ensure that once a user has a blacklisted route, they do not
         # have the ability to remove the blacklists from themselves.
-        delete_blacklist = self._perm_repo.get_permission_from_route(
+        delete_blacklist = self._perm_repo.find_permission_by_route(
                              self._del_blacklist_route)
 
         if delete_blacklist not in user.blacklist:
@@ -168,9 +174,11 @@ class UserRepository:
                 raise ValueError("Unable to add delete_blacklist_from_user.")
 
         # Return the updated user.
-        result = User.objects(id=user.id).first()
+        user = User.objects(id=user.id).first()
 
-        return result
+        self.update_users_updated_at(user)
+
+        return user
 
     def delete_whitelist_from_user(self, data: dict) -> User:
         data = self._get_validated_user_and_permission(data)
@@ -185,9 +193,16 @@ class UserRepository:
             raise ValueError("Could not remove permission"
                              " from users whitelist.")
 
-        result = self.find_user_by_id(user.id)
+        user = self.find_user_by_id(user.id)
 
-        return result
+        self.update_users_updated_at(user)
+
+        return user
+
+    def update_users_updated_at(self, user):
+
+        user.updated_at = dt.datetime.utcnow()
+        user.save()
 
     def delete_blacklist_from_user(self, data: dict) -> User:
         data = self._get_validated_user_and_permission(data)
@@ -202,25 +217,27 @@ class UserRepository:
             raise ValueError("Could not remove permission"
                              " from users blacklist.")
 
-        result = self.find_user_by_id(user.id)
+        user = self.find_user_by_id(user.id)
 
         # If the only permission left in the users blacklist
         # is the auto-added permission to stop the user removing
         # their own blacklist, remove it.
-        permissions_count = len(result.blacklist)
+        permissions_count = len(user.blacklist)
 
         if permissions_count == 1:
-            permission = self._perm_repo.get_permission_from_route(
+            permission = self._perm_repo.find_permission_by_route(
                             self._del_blacklist_route)
 
-            if self._del_blacklist_route in result.blacklist:
+            if self._del_blacklist_route in user.blacklist:
                 count = User.objects(id=user.id).update_one(
                                     pull_blacklist=permission)
 
                 if count > 0:
-                    result = self.find_user_by_id(user.id)
+                    user = self.find_user_by_id(user.id)
 
-        return result
+        self.update_users_updated_at(user)
+
+        return user
 
     def _get_validated_user_and_permission(self, data: dict) -> dict:
         """

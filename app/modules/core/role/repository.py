@@ -1,6 +1,5 @@
 from .models import Role
 from modules.core.permission.models import Permission
-from modules.core.user.models import User
 from uuid import uuid4
 from modules.core.validation.service import ValidationService
 
@@ -27,19 +26,17 @@ class RoleRepository:
         count = Role.objects(id=role_id).update_one(
                                          push__permissions=permission)
 
-        role = None
-
-        if count > 0:
-            role = Role.objects(id=role_id).first()
-        else:
+        if count == 0:
             raise ValueError("Role not found. No permissions updated.")
+
+        role = self.find_role_by_id(role_id)
 
         return role
 
     def find_role_by_id(self, role_id: str) -> Role:
 
         if self._val_service.validate_uuid4(role_id) is False:
-            raise ValueError("Invalid role id.")
+            raise ValueError("Invalid role ID.")
 
         role = Role.objects(id=role_id).first()
 

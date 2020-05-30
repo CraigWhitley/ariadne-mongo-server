@@ -49,18 +49,29 @@ class ValidationService:
     def check_email_exists(self, email: str) -> bool:
         """Checks to see if email exists in database"""
 
-        if User.objects(email__exists=email):
+        # if User.objects(email__iexact=email) is True:
+        #     return True
+
+        # if User.objects(email__match=email) is True:
+        #     return True
+
+        # if User.objects(email__exists=email) is True:
+        #     return True
+
+        # only one that works correctly..?
+
+        if User.objects(email=email).first() is not None:
             return True
-        else:
-            return False
+
+        return False
 
     def check_user_id_exists(self, id: str) -> bool:
         """Checks the user exists by id"""
 
-        if User.objects(id__exists=id):
-            return True
-        else:
+        if User.objects(id__exists=id) is False:
             return False
+
+        return True
 
     def validate_uuid4(self, id: str) -> bool:
         """Ensures the uuid4 id's are valid"""

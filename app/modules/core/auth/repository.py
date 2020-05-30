@@ -39,30 +39,31 @@ class AuthRepository:
 
         user = None
 
-        if self._val_service.validate_email(email):
-            if self._val_service.check_email_exists(email):
-                user = User.objects(email=email).first()
-            else:
-                raise ValueError("Login incorrect.")
-        else:
+        if self._val_service.validate_email(email) is False:
             raise ValueError("Invalid email.")
 
-        if user is not None:
-            if self._val_service.validate_password(password):
-                if self._auth_service.check_password(password, user.password):
-                    token = self._auth_service.get_token(email)
+        if self._val_service.check_email_exists(email) is False:
+            raise ValueError("Login incorrect.")
 
-                    user.access_token = token
-                    user.updated_at = dt.datetime.utcnow()
-                    user.save()
+        user = User.objects(email=email).first()
 
-                    return user
-                else:
-                    raise ValueError("Login incorrect.")
-            else:
-                raise ValueError("Invalid password.")
-        else:
+        if user is None:
             raise ValueError("Login incorrect")
+
+        if self._val_service.validate_password(password) is False:
+            raise ValueError("Invalid password.")
+
+        if self._auth_service.check_password(password,
+                                             user.password) is False:
+            raise ValueError("Login incorrect.")
+
+        token = self._auth_service.get_token(email)
+
+        user.access_token = token
+        user.updated_at = dt.datetime.utcnow()
+        user.save()
+
+        return user
 
     def logout(self, context: dict) -> bool:
         """
@@ -75,6 +76,7 @@ class AuthRepository:
         user = self._auth_service.get_user_from_token(token)
 
         user.access_token = ""
+        user.updated_at = dt.datetime.utcnow()
 
         saved_user = user.save()
 
@@ -82,4 +84,3 @@ class AuthRepository:
             return True
         else:
             return False
-

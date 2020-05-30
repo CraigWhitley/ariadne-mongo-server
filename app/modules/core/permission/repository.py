@@ -24,7 +24,7 @@ class PermissionRepository:
 
         return new_perm
 
-    def get_permission_from_route(self, route: str) -> Permission:
+    def find_permission_by_route(self, route: str) -> Permission:
         
         if self._val_service.validate_permission_route(route) is False:
             raise ValueError("Route is invalid.")

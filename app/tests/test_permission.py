@@ -30,6 +30,16 @@ def test_can_create_new_permission():
     assert result is not None
 
 
+def test_can_find_permission_by_id():
+    permission = _perm_repo.create_new_permission(
+                    route="test:test_new_perm",
+                    description="Just a test permissions.")
+    
+    result = _perm_repo.find_permission_by_id(permission.id)
+
+    assert result is not None
+
+
 def tests_teardown():
     drop_all_collections()
     teardown()
