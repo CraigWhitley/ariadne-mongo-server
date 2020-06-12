@@ -24,9 +24,9 @@ connection_input = ConnectionInput(
 db_service = DatabaseService()
 db_service.connect(connection_input)
 
-permissions = load_all_permissions("json")
+# permissions = load_all_permissions("json")
 
-seed_all(permissions)
+# seed_all(permissions)
 
 server = GraphQLServer(debug=True)
 

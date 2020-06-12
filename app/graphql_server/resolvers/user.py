@@ -1,4 +1,5 @@
 from modules.core.user.models import User
+from modules.core.permission.models import Permission
 from modules.core.auth.service import authenticate
 from modules.core.user.repository import UserRepository
 from typing import List
@@ -35,7 +36,9 @@ def resolve_me(_, info) -> User:
 
 
 @authenticate("user:get_users_permissions")
-def resolve_get_users_permissions(_, info, user_id: str):
+def resolve_get_users_permissions(_, info, 
+                                  user_id: str) -> List[Permission]:
+
     permissions = _repo.get_users_permissions(user_id)
 
     return permissions

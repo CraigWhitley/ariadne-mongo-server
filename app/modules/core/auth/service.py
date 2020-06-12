@@ -10,7 +10,6 @@ import functools
 from graphql import GraphQLResolveInfo
 from modules.core.role.errors import UnauthorizedError
 from uuid import uuid4
-from typing import Dict, Any
 from dotenv import load_dotenv
 
 # TODO: [TEST] We only have 57% here.

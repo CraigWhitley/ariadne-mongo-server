@@ -95,6 +95,7 @@ def test_register_user_returns_correct_users_email():
 
 
 def test_can_update_users_active_status():
+    """Tests a users active status can be updated"""
     user = generate_user().save()
 
     data = {}

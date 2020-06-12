@@ -1,6 +1,10 @@
 {
-    "python.pythonPath": "C:\\PythonProjects\\maintesoft\\env\\Scripts\\python.exe",
+    "python.pythonPath": "c:\\PythonProjects\\maintesoft\\.env\\Scripts\\python.exe",
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.pytest_cache": true
+    }
 }

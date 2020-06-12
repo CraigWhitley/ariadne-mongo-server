@@ -19,9 +19,8 @@ class ValidationService:
     _password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,128}$)"
 
     def validate_user_model(self, user_input: dict) -> User:
-        """
-        Validates the user model
-        """
+        """ Validates the user model """
+
         id = str(uuid4())
         email = user_input["email"]
         password = user_input["password"]
@@ -58,7 +57,7 @@ class ValidationService:
         # if User.objects(email__exists=email) is True:
         #     return True
 
-        # only one that works correctly..?
+        # only one that works correctly: ?
 
         if User.objects(email=email).first() is not None:
             return True

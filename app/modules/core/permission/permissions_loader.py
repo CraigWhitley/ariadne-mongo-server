@@ -1,7 +1,7 @@
 from pathlib import Path
 from os import walk, getenv
 import json
-from platform import system, release, version
+from platform import system
 
 
 class FileLoader:
@@ -41,12 +41,9 @@ def load_all_permissions(file_type):
     permissions = {}
 
     # TODO: [REFACTOR] Break up into generic FileLoader and FolderSearch
-    # for root, dirs, files in walk(modules_path, topdown=True):
     for root, dirs, files in walk(modules_path, topdown=True):
         if file_type == "json":
-
             if "permissions.json" in files:
-
                 file_path = root + "/permissions.json"
 
                 with open(file_path, "r") as read_file:

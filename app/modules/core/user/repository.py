@@ -19,6 +19,7 @@ class UserRepository:
     _del_blacklist_route = "user:delete_blacklist_from_user"
 
     def get_all_users(self, skip=0, take=25) -> List[User]:
+        
         return User.objects[skip:take+skip]
 
     def find_user_by_email(self, email: str) -> User:
@@ -203,11 +204,6 @@ class UserRepository:
 
         return user
 
-    def update_users_updated_at(self, user):
-
-        user.updated_at = dt.datetime.utcnow()
-        user.save()
-
     def delete_blacklist_from_user(self, data: dict) -> User:
         data = self._get_validated_user_and_permission(data)
 
@@ -243,8 +239,12 @@ class UserRepository:
 
         return user
 
-    def update_users_active_status(self, data: dict) -> User:
+    def update_users_updated_at(self, user):
+        # TODO: [DB] Put updated_at mutation in user pre-save call
+        user.updated_at = dt.datetime.utcnow()
+        user.save()
 
+    def update_users_active_status(self, data: dict) -> User:
         user_id = data["userId"]
         is_active = data["isActive"]
 
@@ -286,4 +286,3 @@ class UserRepository:
         result["permission"] = permission
 
         return result
-
